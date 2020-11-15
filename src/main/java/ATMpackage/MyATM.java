@@ -49,7 +49,8 @@ public class MyATM {
     public void getBalanceATM() {
         // Метод предоставляет баланс
 
-        getAuthentication();    // Если карта не найдена, или пин неверный, программа вылетает
+        getAuthentication();    // Если карта не найдена, или пин неверный, то программа вылетает в этом методе
+
         System.out.println("Баланс карты " + card.getCardNumber() + " равен: " + card.getBalance() +
                 "\t" + card.getAmount());
     }
