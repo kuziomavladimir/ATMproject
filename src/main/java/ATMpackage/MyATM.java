@@ -11,8 +11,8 @@ public class MyATM {
 
     public MyATM() {
         dataBaseHandler = new DataBaseHandler();
-        dataBaseHandler.showDataBase(); //отображает сиписок карт из базы данных для удобства
-                                        // тестирования (позже нужно убрать)
+        for (String s : dataBaseHandler.showDataBase()) // отображает сиписок карт из базы данных для
+            System.out.println(s);                      // удобства тестирования (позже нужно убрать)
     }
 
     public void getAuthentication() {
@@ -31,6 +31,7 @@ public class MyATM {
             System.exit(1);
         }
 
+        System.out.println("Карта найдена!");
         for(int i = 0; i < 3; i++) {
             System.out.print("Введите пин-код:\t");
             userPinCode = s.nextLine();

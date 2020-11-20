@@ -25,12 +25,15 @@ public class DataBaseHandler {
         }
     }
 
-    public void showDataBase() {
-        // Вспомогательный метод, отображает заполненную базу данных
+    public ArrayList<String> showDataBase() {
+        // Вспомогательный метод, возвращает заполненную
+        // базу данных в виде строк
 
+        ArrayList<String> arrayList = new ArrayList<String>();
         for (Card c: cardSet)
-            System.out.println(c.getCardNumber() + "\t" + c.getPinCode() + "\t" + c.getBalance() +
-                                "\t" + c.getAmount());
+            arrayList.add(c.getCardNumber() + "\t" + c.getPinCode() + "\t" + c.getBalance() +
+                            "\t" + c.getAmount());
+        return arrayList;
     }
 
     public Card searchCard(String cardNumber) {
@@ -38,7 +41,6 @@ public class DataBaseHandler {
 
         for (Card c: cardSet) {
             if(c.getCardNumber().equals(cardNumber)) {
-                System.out.println("Карта найдена!");
                 card = c;
                 break;
             }
