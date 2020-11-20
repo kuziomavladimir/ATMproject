@@ -11,7 +11,8 @@ public class MyATM {
 
     public MyATM() {
         dataBaseHandler = new DataBaseHandler();
-        dataBaseHandler.showDataBase();
+        dataBaseHandler.showDataBase(); //отображает сиписок карт из базы данных для удобства
+                                        // тестирования (позже нужно убрать)
     }
 
     public void getAuthentication() {
