@@ -11,8 +11,8 @@ public class MyATM {
 
     public MyATM() {
         dataBaseHandler = new DataBaseHandler();
-        for (String s : dataBaseHandler.showDataBase()) // отображает сиписок карт из базы данных для
-            System.out.println(s);                      // удобства тестирования (позже нужно убрать)
+        for (Card c: dataBaseHandler.getCardSet())  // отображает сиписок карт из базы данных для
+            System.out.println(c.toString());       // удобства тестирования (позже нужно убрать)
     }
 
     public void getAuthentication() {

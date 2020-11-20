@@ -1,10 +1,12 @@
 package databasepackage;
 
 import cardpackage.Card;
+import lombok.Getter;
+
 import java.util.ArrayList;
 
 public class DataBaseHandler {
-
+    @Getter
     private ArrayList<Card> cardSet;
     private Card card;
 
@@ -23,17 +25,6 @@ public class DataBaseHandler {
                 card.setAmount("RUR");
             cardSet.add(card);
         }
-    }
-
-    public ArrayList<String> showDataBase() {
-        // Вспомогательный метод, возвращает заполненную
-        // базу данных в виде строк
-
-        ArrayList<String> arrayList = new ArrayList<String>();
-        for (Card c: cardSet)
-            arrayList.add(c.getCardNumber() + "\t" + c.getPinCode() + "\t" + c.getBalance() +
-                            "\t" + c.getAmount());
-        return arrayList;
     }
 
     public Card searchCard(String cardNumber) {
