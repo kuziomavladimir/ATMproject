@@ -35,12 +35,9 @@ public class DataBaseHandler {
                 card = c;
                 break;
             }
-            else {
+            else
                 card = null;
-            }
         }
         return card;
     }
-
-
 }
