@@ -14,15 +14,10 @@ public class DataBaseHandler {
         // Заполняем тестовую базу данных произвольными картами (пока использую
         // ArrayList в качестве базы данных, в дальнейшем подключу MySQL)
 
-        cardSet = new ArrayList<Card>();
+        cardSet = new ArrayList<>();
 
         for (int i =0; i < 100; i ++) {
-            card = new Card(Integer.toString(1000 + i), Integer.toString(i));
-            card.setBalance(Math.random()*10000);
-            if (i % 3 == 0)
-                card.setAmount("USD");
-            else
-                card.setAmount("RUR");
+            card = new Card(Integer.toString(1000 + i), Integer.toString(i), "RUR", Math.random()*10000);
             cardSet.add(card);
         }
     }

@@ -2,6 +2,8 @@ package ATMpackage;
 
 import cardpackage.Card;
 import databasepackage.DataBaseHandler;
+
+import java.util.Optional;
 import java.util.Scanner;
 
 public class MyATM {
@@ -12,7 +14,7 @@ public class MyATM {
     public MyATM() {
         dataBaseHandler = new DataBaseHandler();
         for (Card c: dataBaseHandler.getCardSet())  // отображает сиписок карт из базы данных для
-            System.out.println(c.toString());       // удобства тестирования (позже нужно убрать)
+            System.out.println(c);                  // удобства тестирования (позже нужно убрать)
     }
 
     public void getAuthentication() {
@@ -25,8 +27,12 @@ public class MyATM {
         System.out.print("Введите номер карты:\t");
         userCardNumber = s.nextLine();
 
+
         card = dataBaseHandler.searchCard(userCardNumber);
-        if (card == null) {
+//        Optional<Card> optionalCard = Optional.ofNullable(dataBaseHandler.searchCard(userCardNumber));
+//        card = optionalCard.orElse(new Card("null", "null"));
+
+        if (card.getCardNumber() == "null") {
             System.out.println("Карта с таким номером не найдена");
             System.exit(1);
         }
