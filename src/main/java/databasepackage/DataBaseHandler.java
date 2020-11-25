@@ -15,24 +15,9 @@ public class DataBaseHandler {
         // ArrayList в качестве базы данных, в дальнейшем подключу MySQL)
 
         cardSet = new ArrayList<>();
-
         for (int i =0; i < 100; i ++) {
             card = new Card(Integer.toString(1000 + i), Integer.toString(i), "RUR", Math.random()*10000);
             cardSet.add(card);
         }
-    }
-
-    public Card searchCard(String cardNumber) {
-        // Ищем карту в базе данных по номеру карты (cardNumber)
-
-        for (Card c: cardSet) {
-            if(c.getCardNumber().equals(cardNumber)) {
-                card = c;
-                break;
-            }
-            else
-                card = null;
-        }
-        return card;
     }
 }
