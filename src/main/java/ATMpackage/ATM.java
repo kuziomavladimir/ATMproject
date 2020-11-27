@@ -1,12 +1,11 @@
 package ATMpackage;
 
 import cardpackage.Card;
+import java.util.List;
 
-import java.util.ArrayList;
+public class ATM {
 
-public class MyATM {
-
-    public Card searchCard(String userCardNumber, ArrayList<Card> cardSet) {
+    public Card searchCard(String userCardNumber, List<Card> cardSet) {
         // Ищем карту в базе данных по номеру карты (cardNumber)
 
         Card card = new Card();
@@ -19,10 +18,12 @@ public class MyATM {
         return card;
     }
 
-    public boolean getAuthentication(Card userCard, String userPinCode) {
-        if (userCard.getPinCode().equals(userPinCode))
+    public boolean isAuthenticated(Card userCard, String userPinCode) {
+        if (userCard.getPinCode().equals(userPinCode) && userCard.getAttemptsEnterPin() > 0)
             return true;
-        else
+        else {
+            userCard.setAttemptsEnterPin(userCard.getAttemptsEnterPin() - 1);
             return false;
+        }
     }
 }

@@ -1,20 +1,20 @@
 package org.example;
 
-import ATMpackage.MyATM;
+import ATMpackage.ATM;
 import cardpackage.Card;
-import databasepackage.DataBaseHandler;
+import databasepackage.DataBase;
 
 import java.util.Scanner;
 
 public class MainClass {
     public static void main(String[] args) {
 
-        DataBaseHandler dataBaseHandler = new DataBaseHandler();
-        for (Card c: dataBaseHandler.getCardSet())  // отображает сиписок карт из базы данных для
+        DataBase dataBase = new DataBase();
+        for (Card c: dataBase.getCardSet())  // отображает сиписок карт из базы данных для
             System.out.println(c);                  // удобства тестирования (позже нужно убрать)
 
         Card card = new Card();
-        MyATM myATM = new MyATM();
+        ATM myATM = new ATM();
 
         Scanner s = new Scanner(System.in);
         String userCardNumber;
@@ -22,7 +22,7 @@ public class MainClass {
         System.out.print("Введите номер карты:\t");
         userCardNumber = s.nextLine();
 
-        card = myATM.searchCard(userCardNumber, dataBaseHandler.getCardSet());
+        card = myATM.searchCard(userCardNumber, dataBase.getCardSet());
         if (card.getCardNumber() == null) {
             System.out.println("Карта с таким номером не найдена");
             System.exit(1);
@@ -32,7 +32,7 @@ public class MainClass {
         for(int i = 0; i < 3; i++) {
             System.out.print("Введите пин-код:\t");
             userPinCode = s.nextLine();
-            if(myATM.getAuthentication(card, userPinCode)) {
+            if(myATM.isAuthenticated(card, userPinCode)) {
                 System.out.println("Верно!!!");
                 System.out.println("Баланс карты " + card.getCardNumber() + " равен: " + card.getBalance() +
                                     "\t" + card.getAmount());

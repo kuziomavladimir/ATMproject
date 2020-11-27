@@ -12,4 +12,5 @@ public class Card {
     private String pinCode;
     private String amount;
     private double balance;
+    private int attemptsEnterPin;
 }
