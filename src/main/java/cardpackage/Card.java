@@ -10,7 +10,7 @@ import lombok.*;
 public class Card {
     private String cardNumber;
     private String pinCode;
-    private String amount;
+    private String amount;          // Валюта
     private double balance;
-    private int attemptsEnterPin;
+    private int tryesEnterPin = 3;  // Оставшиеся попытки ввода пин-кода
 }
