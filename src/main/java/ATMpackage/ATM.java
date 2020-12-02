@@ -11,6 +11,7 @@ public class ATM {
 
     public Card searchCard(String userCardNumber, DataBase dataBase) throws CardNotFoundException {
         // Поиск карты в базе данных по номеру карты (cardNumber)
+
         for (Card c : dataBase.getCardSet()) {
             if (c.getCardNumber().equals(userCardNumber))
                 return c;
@@ -18,22 +19,23 @@ public class ATM {
         throw new CardNotFoundException("Карта не найдена");
     }
 
-    public boolean isAuthenticated(Card userCard, String userPinCode) throws IncorrectPinException {
+    public void authentication(Card userCard, String userPinCode) throws IncorrectPinException {
         // Аутентификация
+
         if (userCard.getTryesEnterPin() <= 0)
             throw new IncorrectPinException("Пин-код ранее был введен неверно 3 раза, операция недоступна");
-        if (userCard.getPinCode().equals(userPinCode))
-            return true;
-        else {
+        if (!userCard.getPinCode().equals(userPinCode)) {
             userCard.setTryesEnterPin(userCard.getTryesEnterPin() - 1);
-            return false;
+            throw new IncorrectPinException("Неверный Пин!");
         }
     }
 
-    public void transferCardToCard(Card senderCard, Card recipientCard, Double amountSum) throws NegativeBalanceException {
+    public void transferCardToCard(Card userCard, Card recipientCard, Double amountSum)
+            throws NegativeBalanceException {
         // Перевод с карты на карту
-        if(senderCard.getBalance() >= amountSum) {
-            senderCard.setBalance(senderCard.getBalance() - amountSum);
+
+        if(userCard.getBalance() >= amountSum) {
+            userCard.setBalance(userCard.getBalance() - amountSum);
             recipientCard.setBalance(recipientCard.getBalance() + amountSum);
         }
         else {
