@@ -25,6 +25,8 @@ public class MainClass {
                     break;
             }
         } while (str.hashCode() != 113);
+//        } while (str != "q");     // Если проверяю q таким образом, выход из цикла не производится... странно...
+
 
         System.out.println(dataBase);
     }
