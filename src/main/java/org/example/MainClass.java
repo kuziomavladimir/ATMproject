@@ -14,7 +14,6 @@ public class MainClass {
 
          do {
             System.out.println("Что будем делать?\n1 - проверить баланс, 2 - сделать перевод, q - выход");
-
             str = s.nextLine();
             switch (str) {
                 case "1":
@@ -26,7 +25,6 @@ public class MainClass {
             }
         } while (str.hashCode() != 113);
 //        } while (str != "q");     // Если проверяю q таким образом, выход из цикла не производится... странно...
-
 
         System.out.println(dataBase);
     }

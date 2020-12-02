@@ -8,7 +8,7 @@ import databasepackage.DataBase;
 import java.util.Scanner;
 
 public class ScriptsController {
-    // Класс с утилитарными методами, описывает сценарий запроса баланса карты,
+    // Класс с утилитарными методами, описывает сценарии запроса баланса карты и перевода,
     // Не входит в доменную модель, создан для удобства, чтобы не перегружать метод main
 
     private DataBase dataBase;
