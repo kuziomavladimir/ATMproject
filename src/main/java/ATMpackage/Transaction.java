@@ -12,7 +12,7 @@ public class Transaction {
     private LocalDate localDate;
     private double amount;
     private String currency;
-    private String transactionType;
+    private String transactionType;  //todo: Расход или приход продумать
 
     public Transaction(LocalDate localDate, double amount, String currency) {
         this.localDate = localDate;
