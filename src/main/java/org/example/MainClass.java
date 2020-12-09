@@ -13,7 +13,7 @@ public class MainClass {
         String str;
 
          do {
-            System.out.println("Что будем делать?\n1 - проверить баланс, 2 - сделать перевод, q - выход");
+            System.out.println("1 - проверить баланс, 2 - сделать перевод, q - выход");
             str = s.nextLine();
             switch (str) {
                 case "1":
@@ -23,8 +23,7 @@ public class MainClass {
                     new ScriptsController(dataBase).doTransfer();
                     break;
             }
-        } while (str.hashCode() != 113);
-//        } while (str != "q");     // Если проверяю q таким образом, выход из цикла не производится... странно...
+        } while (!str.equals("q"));     // Если проверяю q таким образом, выход из цикла не производится... странно...
 
         System.out.println(dataBase);
     }

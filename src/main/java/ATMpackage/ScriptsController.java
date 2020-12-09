@@ -1,10 +1,11 @@
 package ATMpackage;
 
 import cardpackage.Card;
-import customExeptions.CardNotFoundException;
 import customExeptions.IncorrectPinException;
 import customExeptions.NegativeBalanceException;
 import databasepackage.DataBase;
+
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class ScriptsController {
@@ -28,11 +29,14 @@ public class ScriptsController {
 
         try {
             searching();
-        } catch (CardNotFoundException | IncorrectPinException e) {
+        } catch (IncorrectPinException e) {
             System.out.println(e);
             return;
+        } catch (NoSuchElementException e) {
+            System.out.println("Карта не найдена");
+            return;
         }
-        System.out.println("Баланс карты " + card.getCardNumber() + " равен: " + card.getBalance() + "\t" + card.getAmount());
+        System.out.println("Баланс карты " + card.getCardNumber() + " равен: " + card.getBalance() + "\t" + card.getCurrency());
     }
 
     public void doTransfer() {
@@ -40,8 +44,11 @@ public class ScriptsController {
 
         try {
             searching();
-        } catch (CardNotFoundException | IncorrectPinException e) {
+        } catch (IncorrectPinException e) {
             System.out.println(e);
+            return;
+        } catch (NoSuchElementException e) {
+            System.out.println("Карта не найдена");
             return;
         }
 
@@ -51,8 +58,8 @@ public class ScriptsController {
 
         try {
             recipientCard = myATM.searchCard(recipientCardNumber, dataBase);
-        } catch (CardNotFoundException e) {
-            System.out.println(e);
+        } catch (NoSuchElementException e) {
+            System.out.println("Карта не найдена");
             return;
         }
 
@@ -66,7 +73,7 @@ public class ScriptsController {
         }
     }
 
-    private void searching() throws CardNotFoundException, IncorrectPinException {
+    private void searching() throws NoSuchElementException, IncorrectPinException {
         // Сценарий поиска карты
 
         scanner = new Scanner(System.in);
