@@ -15,7 +15,7 @@ public class DataBase {
         // Заполняем тестовую базу данных произвольными картами
         cardSet = new ArrayList<>();
         for (int i =0; i < 10; i ++) {
-            Card card = new Card(Integer.toString(1000 + i), Integer.toString(i), "RUR", Math.random() * 10000, 3);
+            Card card = new Card(Integer.toString(1000 + i), Integer.toString(i), "RUR", Math.random() * 10000);
             cardSet.add(card);
         }
     }
