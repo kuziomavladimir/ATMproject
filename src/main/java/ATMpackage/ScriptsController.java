@@ -1,6 +1,6 @@
 package ATMpackage;
 
-import cardpackage.Card;
+import productpackage.Card;
 import customExeptions.IncorrectPinException;
 import customExeptions.NegativeBalanceException;
 import databasepackage.DataBase;
@@ -36,7 +36,7 @@ public class ScriptsController {
             System.out.println("Карта не найдена");
             return;
         }
-        System.out.println("Баланс карты " + card.getCardNumber() + " равен: " + card.getBalance() + "\t" + card.getCurrency());
+        System.out.println("Баланс карты " + card.getProductNumber() + " равен: " + card.getBalance() + "\t" + card.getCurrency());
     }
 
     public void doTransfer() {
@@ -67,10 +67,26 @@ public class ScriptsController {
         Double amountSum = Double.parseDouble(scanner.nextLine());
 
         try {
-            myATM.transferCardToCard(card, recipientCard, amountSum);
+            myATM.transferPToP(card, recipientCard, amountSum);
         } catch (NegativeBalanceException e) {
             System.out.println(e);
         }
+    }
+
+    public void showTransactions() {
+        // Сценарий показа транзакций
+        try {
+            searching();
+        } catch (IncorrectPinException e) {
+            System.out.println(e);
+            return;
+        } catch (NoSuchElementException e) {
+            System.out.println("Карта не найдена");
+            return;
+        }
+
+        for(int i = 0; i < card.getTransactionList().size(); i++)
+            System.out.println(card.getTransactionList().get(i));
     }
 
     private void searching() throws NoSuchElementException, IncorrectPinException {

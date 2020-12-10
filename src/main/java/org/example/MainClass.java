@@ -13,7 +13,7 @@ public class MainClass {
         String str;
 
          do {
-            System.out.println("1 - проверить баланс, 2 - сделать перевод, q - выход");
+            System.out.println("1 - проверить баланс, 2 - сделать перевод, 3 - Показать историю операций, q - выход");
             str = s.nextLine();
             switch (str) {
                 case "1":
@@ -22,8 +22,11 @@ public class MainClass {
                 case "2":
                     new ScriptsController(dataBase).doTransfer();
                     break;
+                case "3":
+                    new ScriptsController(dataBase).showTransactions();
+                    break;
             }
-        } while (!str.equals("q"));     // Если проверяю q таким образом, выход из цикла не производится... странно...
+        } while (!str.equals("q"));
 
         System.out.println(dataBase);
     }
