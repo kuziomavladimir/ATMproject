@@ -8,10 +8,10 @@ import java.util.List;
 
 @Getter
 @Setter
-public class User<T> {
+public class User {
     private String name;
     private String surname;
-    private List<T> productList;
+    private List<BankProduct> productList;
 
     public User(String name, String surname) {
         this.name = name;
