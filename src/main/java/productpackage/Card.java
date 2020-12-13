@@ -10,21 +10,19 @@ import java.util.List;
 @Setter
 @ToString
 public class Card implements BankProduct {
-    private final String productNumber;
+    private final String number;
     private final String currency;
     private String pinCode;
     private double balance;
-    private int tryesEnterPin = 3;      // Оставшиеся попытки ввода пин-кода
+    private int tryesEnterPin;      // Оставшиеся попытки ввода пин-кода
     private List<Transaction> transactionList;
 
-    public Card(String cardNumber, String pinCode, String currency, double balance) {
-        this.productNumber = cardNumber;
+    public Card(String number, String pinCode, String currency, double balance) {
+        this.number = number;
         this.pinCode = pinCode;
         this.currency = currency;
         this.balance = balance;
+        tryesEnterPin = 3;
         transactionList = new ArrayList<>();
     }
-
-//:todo добавить лист истории транзакций
-
 }

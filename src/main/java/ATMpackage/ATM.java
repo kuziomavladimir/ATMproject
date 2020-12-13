@@ -11,7 +11,7 @@ import productpackage.User;
 import java.time.LocalDate;
 import java.util.NoSuchElementException;
 
-public class ATM <T extends BankProduct, V extends BankProduct>{
+public class ATM {
     // Основной класс с бизнесс-методами, моделирует функции банкомата, входит в доменную модель
 
 //    public Card searchCard(String userCardNumber, DataBase dataBase) throws NoSuchElementException {
@@ -20,55 +20,46 @@ public class ATM <T extends BankProduct, V extends BankProduct>{
 //        return dataBase.getCardSet().stream().filter((s) -> s.getProductNumber().equals(userCardNumber)).findFirst().get();
 //    }
 
-    public Card searchCard(String userCardNumber, DataBase dataBase) throws NoSuchElementException {
-        // Поиск карты в базе данных по номеру карты (cardNumber)
+    public BankProduct searchProduct(String productNumber, DataBase dataBase) throws NoSuchElementException {
+        // Поиск карты в базе данных по номеру карты или вклада
 
         for(User u: dataBase.getUserList()) {
-            for(Card c: u.getCardList()) {
-                if(c.getProductNumber() == userCardNumber)
+            for(BankProduct c: u.getProductList()) {
+                if(c.getNumber().equals(productNumber)) {
                     return c;
+                }
             }
         }
-        throw new NoSuchElementException("Карта не найдена!");
+        throw new NoSuchElementException("Продукт не найден!");
     }
 
-    public Deposit searchDeposit(String userDepositNumber, DataBase dataBase) throws NoSuchElementException {
-        // Поиск вклада в базе данных по номеру карты (cardNumber)
-
-        for(User u: dataBase.getUserList()) {
-            for(Deposit d: u.getDepositList()) {
-                if(d.getProductNumber() == userDepositNumber)
-                    return d;
-            }
-        }
-        throw new NoSuchElementException("Карта не найдена!");
-    }
-
-    public void authentication(Card userCard, String userPinCode) throws IncorrectPinException {
+    public void authentication(BankProduct userCard, String userPinCode) throws IncorrectPinException {
         // Аутентификация
 
-        if (userCard.getTryesEnterPin() <= 0)
+        if(!(userCard instanceof Card))
+            throw new IncorrectPinException("По вкладу аутентификация невозможна!");
+        if (((Card)userCard).getTryesEnterPin() <= 0)
             throw new IncorrectPinException("Пин-код ранее был введен неверно 3 раза, операция недоступна");
-        if (!userCard.getPinCode().equals(userPinCode)) {
-            userCard.setTryesEnterPin(userCard.getTryesEnterPin() - 1);
+        if (!((Card)userCard).getPinCode().equals(userPinCode)) {
+            ((Card)userCard).setTryesEnterPin(((Card)userCard).getTryesEnterPin() - 1);
             throw new IncorrectPinException("Неверный Пин!");
         }
     }
 
-    public void transferPToP(T userProduct, V recipientProduct, Double amountSum)
+    public void transferPToP(BankProduct senderProduct, BankProduct recipientProduct, Double amountSum)
             throws NegativeBalanceException {
-        // Перевод с карты на карту
+        // Перевод с карты на карту или на вклад
 
-        Transaction transaction = new Transaction(LocalDate.now(), amountSum, userProduct.getCurrency(), "Расход");
-        if(userProduct.getBalance() >= amountSum) {
-            userProduct.setBalance(userProduct.getBalance() - amountSum);
-            userProduct.getTransactionList().add(transaction);
+        Transaction transaction = new Transaction(LocalDate.now(), amountSum, senderProduct.getCurrency(), "Расход");
+        if(senderProduct.getBalance() >= amountSum) {
+            senderProduct.setBalance(senderProduct.getBalance() - amountSum);
+            senderProduct.getTransactionList().add(transaction);
 
             recipientProduct.setBalance(recipientProduct.getBalance() + amountSum);
             recipientProduct.getTransactionList().add(new Transaction(transaction, "Приход"));
         }
         else {
-            throw new NegativeBalanceException("Введенная сумма превышает остаток на вашей карте");
+            throw new NegativeBalanceException("Введенная сумма превышает остаток на вашем счете!");
         }
     }
     //:todo Обобщить этот метод для работы и с картами и с депозитами

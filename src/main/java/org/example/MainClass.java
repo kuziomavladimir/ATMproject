@@ -2,13 +2,17 @@ package org.example;
 
 import ATMpackage.ScriptsController;
 import databasepackage.DataBase;
+import productpackage.BankProduct;
 
 import java.util.Scanner;
+import java.util.function.Consumer;
 
 public class MainClass {
     public static void main(String[] args) {
         DataBase dataBase = new DataBase();
+        ScriptsController scriptsController = new ScriptsController(dataBase);
         System.out.println(dataBase);
+
         Scanner s = new Scanner(System.in);
         String str;
 

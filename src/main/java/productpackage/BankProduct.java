@@ -7,7 +7,7 @@ import lombok.Setter;
 import java.util.List;
 
 public interface BankProduct {
-    String getProductNumber();
+    String getNumber();
     String getCurrency();
     double getBalance();
     List getTransactionList();
