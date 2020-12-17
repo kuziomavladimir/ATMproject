@@ -65,7 +65,7 @@ class DepositTest {
             log.info(violation.getMessage() + "\n" + violation.getInvalidValue());
         }
 
-        validationSet = validator.validateValue(Deposit.class, "balance", -12.0);
+        validationSet = validator.validateValue(Deposit.class, "balance", 12.0);
         for (ConstraintViolation<Deposit> violation: validationSet) {
             log.info(violation.getMessage() + "\n" + violation.getInvalidValue());
         }

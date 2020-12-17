@@ -19,13 +19,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @Slf4j
 class UserTest {
 
-//    private static Validator validator;
-//
-//    @BeforeAll
-//    public static void setUp() {
-//        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-//        validator = factory.getValidator();
-//    }
+    private static Validator validator;
+
+    @BeforeAll
+    public static void setUp() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        validator = factory.getValidator();
+    }
 
     @Test
     void setName() {
@@ -51,13 +51,13 @@ class UserTest {
     void getSurname() {
     }
 
-//    @Test
-//    void getEMail() {
-//        Set<ConstraintViolation<User>> violationSet = validator.validateValue(User.class, "eMail", "kuziomavladimir@yandex.ru");
-//        for (ConstraintViolation<User> violation: violationSet) {
-//            log.info(violation.getMessage() + "\n" + violation.getInvalidValue());
-//        }
-//    }
+    @Test
+    void getEMail() {
+        Set<ConstraintViolation<User>> violationSet = validator.validateValue(User.class, "eMail", "kuziomavladimir@yandex.ru");
+        for (ConstraintViolation<User> violation: violationSet) {
+            log.info(violation.getMessage() + "\n" + violation.getInvalidValue());
+        }
+    }
 
     @Test
     void getProductList() {
