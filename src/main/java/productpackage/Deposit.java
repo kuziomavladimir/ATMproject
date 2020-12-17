@@ -3,6 +3,7 @@ package productpackage;
 import ATMpackage.Transaction;
 import lombok.*;
 
+import javax.validation.constraints.Min;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +13,7 @@ import java.util.List;
 public class Deposit implements BankProduct {
         private final String number;
         private final String currency;
+        @Min(0)
         private double balance;             //:todo изменить на бигдесимал
         private List<Transaction> transactionList;
 

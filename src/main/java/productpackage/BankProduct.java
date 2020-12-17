@@ -1,8 +1,6 @@
 package productpackage;
 
 import ATMpackage.Transaction;
-import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 

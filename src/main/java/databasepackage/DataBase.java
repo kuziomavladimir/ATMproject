@@ -30,7 +30,6 @@ public class DataBase {
         }
     }
 
-
     @Override
     public String toString() {
         List<BankProduct> list = new ArrayList();

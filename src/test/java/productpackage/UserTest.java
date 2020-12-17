@@ -1,41 +1,67 @@
-package cardpackage;
+package productpackage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import productpackage.Card;
-import productpackage.User;
 
+import javax.jws.soap.SOAPBinding;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+
 
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
-class CardTest {
+class UserTest {
 
     private static Validator validator;
+    private static User user;
 
     @BeforeAll
     public static void setUp() {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
+        //user = new User("Vladimir", "Vladimirov");
     }
 
     @Test
-    void getBalance() {
-        assertEquals(1,1);
+    void setName() {
     }
 
     @Test
-    void getPinCode() {
-        Set<ConstraintViolation<Card>> violationSet = validator.validateValue(Card.class, "pinCode", "123");
-        for (ConstraintViolation<Card> violation: violationSet) {
+    void setSurname() {
+    }
+
+    @Test
+    void setEMail() {
+    }
+
+    @Test
+    void setProductList() {
+    }
+
+    @Test
+    void getName() {
+    }
+
+    @Test
+    void getSurname() {
+    }
+
+    @Test
+    void getEMail() {
+        Set<ConstraintViolation<User>> violationSet = validator.validateValue(User.class, "eMail", "kuziomavladimir@yandex.ru");
+        for (ConstraintViolation<User> violation: violationSet) {
             log.info(violation.getMessage() + "\n" + violation.getInvalidValue());
         }
+    }
+
+    @Test
+    void getProductList() {
     }
 }
