@@ -1,5 +1,6 @@
 package ATMpackage;
 
+import lombok.extern.slf4j.Slf4j;
 import productpackage.BankProduct;
 import productpackage.Card;
 import customExeptions.IncorrectPinException;
@@ -12,6 +13,7 @@ import java.util.Scanner;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+@Slf4j
 public class ScriptsController {
     // Класс с утилитарными методами, описывает сценарии запроса баланса карты и перевода,
     // Не входит в доменную модель, создан для удобства, чтобы не перегружать метод main
@@ -34,13 +36,13 @@ public class ScriptsController {
         try {
             searching();
         } catch (IncorrectPinException e) {
-            System.out.println(e);
+            log.warn(e.toString());
             return;
         } catch (NoSuchElementException e) {
-            System.out.println("Карта не найдена");
+            log.warn("Карта не найдена");
             return;
         }
-        System.out.println("Баланс карты " + product.getNumber() + " равен: " + product.getBalance() + "\t" + product.getCurrency());
+        log.info("Баланс карты {} равен: {}\t{}", product.getNumber(), product.getBalance(), product.getCurrency());
     }
 
     public void doTransfer() {
@@ -49,31 +51,32 @@ public class ScriptsController {
         try {
             searching();
         } catch (IncorrectPinException e) {
-            System.out.println(e);
+            log.warn(e.toString());
             return;
         } catch (NoSuchElementException e) {
-            System.out.println("Карта не найдена");
+            log.warn("Карта не найдена");
             return;
         }
 
         BankProduct recipientCard;
-        System.out.print("Введите номер карты/депозита получателя:\t");
+        log.info("Введите номер карты/депозита получателя:\t");
         String recipientCardNumber = scanner.nextLine();
 
         try {
             recipientCard = myATM.searchProduct(recipientCardNumber, dataBase);
         } catch (NoSuchElementException e) {
-            System.out.println("Получатель не найден");
+            log.warn("Получатель не найден");
             return;
         }
 
-        System.out.print("Введите сумму перевода:\t");
+        log.info("Введите сумму перевода:\t");
         Double amountSum = Double.parseDouble(scanner.nextLine());
 
         try {
             myATM.transferPToP(product, recipientCard, amountSum);
         } catch (NegativeBalanceException e) {
-            System.out.println(e);
+            log.warn(e.toString());
+            return;
         }
     }
 
@@ -82,28 +85,29 @@ public class ScriptsController {
         try {
             searching();
         } catch (IncorrectPinException e) {
-            System.out.println(e);
+            log.warn(e.toString());
             return;
         } catch (NoSuchElementException e) {
-            System.out.println("Продукт не найден");
+            log.warn("Продукт не найден");
             return;
         }
 
-        for(int i = 0; i < product.getTransactionList().size(); i++)
-            System.out.println(product.getTransactionList().get(i));
+        for(Transaction t: product.getTransactionList()) {
+            log.info(t.toString());
+        }
     }
 
     private void searching() throws NoSuchElementException, IncorrectPinException {
         // Сценарий поиска карты
 
         scanner = new Scanner(System.in);
-        System.out.print("Введите номер вашей карты:\t");
+        log.info("Введите номер вашей карты:\t");
         userCardNumber = scanner.nextLine();
 
         BiFunction<String, DataBase, BankProduct> biFunction = myATM::searchProduct;
         product = biFunction.apply(userCardNumber, dataBase);
 
-        System.out.print("Введите пин-код:\t");
+        log.info("Введите пин-код:\t");
         userPinCode = scanner.nextLine();
         myATM.authentication(product, userPinCode);
     }

@@ -30,6 +30,10 @@ public class DataBase {
         }
     }
 
+    public User getUserByName(String name) {
+        return userList.stream().filter((s) -> s.getName().equals(name)).findFirst().get();
+    }
+
     @Override
     public String toString() {
         List<BankProduct> list = new ArrayList();

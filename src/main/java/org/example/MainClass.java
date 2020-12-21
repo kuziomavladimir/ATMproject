@@ -2,22 +2,27 @@ package org.example;
 
 import ATMpackage.ScriptsController;
 import databasepackage.DataBase;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import productpackage.BankProduct;
 
 import java.util.Scanner;
 import java.util.function.Consumer;
 
+@Slf4j
 public class MainClass {
+
     public static void main(String[] args) {
+
         DataBase dataBase = new DataBase();
         ScriptsController scriptsController = new ScriptsController(dataBase);
-        System.out.println(dataBase);
+        log.info(dataBase.toString());
 
         Scanner s = new Scanner(System.in);
         String str;
 
          do {
-            System.out.println("1 - проверить баланс, 2 - сделать перевод, 3 - Показать историю операций, q - выход");
+             log.info("1 - проверить баланс, 2 - сделать перевод, 3 - Показать историю операций, q - выход");
             str = s.nextLine();
             switch (str) {
                 case "1":
@@ -32,6 +37,6 @@ public class MainClass {
             }
         } while (!str.equals("q"));
 
-        System.out.println(dataBase);
+        log.info(dataBase.toString());
     }
 }

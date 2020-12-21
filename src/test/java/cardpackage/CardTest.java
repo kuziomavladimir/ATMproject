@@ -2,6 +2,7 @@ package cardpackage;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
+
 import org.junit.jupiter.api.Test;
 import productpackage.Card;
 import productpackage.User;
@@ -11,6 +12,9 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -37,5 +41,15 @@ class CardTest {
         for (ConstraintViolation<Card> violation: violationSet) {
             log.info(violation.getMessage() + "\n" + violation.getInvalidValue());
         }
+    }
+
+    @Test
+    void testPerformance() {
+        List<Card> cardList = new ArrayList<>();
+
+        assertTimeout(Duration.ofMillis(10), () -> {
+            for (int i = 0; i <= 10000; i++)
+                cardList.add(new Card("1234", "1", "RUR", 1000));
+        }, () -> "Тест выполняется больше 10 милисекунд");
     }
 }

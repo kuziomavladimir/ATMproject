@@ -8,7 +8,7 @@ public interface BankProduct {
     String getNumber();
     String getCurrency();
     double getBalance();
-    List getTransactionList();
+    List<Transaction> getTransactionList();
 
     void setBalance(double d);
     void setTransactionList(List<Transaction> list);
