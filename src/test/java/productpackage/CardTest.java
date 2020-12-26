@@ -37,7 +37,7 @@ class CardTest {
 
     @Test
     void getPinCode() {
-        Set<ConstraintViolation<Card>> violationSet = validator.validateValue(Card.class, "pinCode", "1208");
+        Set<ConstraintViolation<Card>> violationSet = validator.validateValue(Card.class, "pinCode", "1258");
         for (ConstraintViolation<Card> violation: violationSet) {
             log.info(violation.getMessage() + "\n" + violation.getInvalidValue());
         }
