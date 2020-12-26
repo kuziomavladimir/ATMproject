@@ -54,7 +54,7 @@ class UserTest {
     @Test
     void checkUserPresence() {
         MockitoAnnotations.initMocks(this);
-        given(dataBase.getUserByName("UserNaj;me0")).willReturn(new User("Vladimir", "Vladimirov"));
+        given(dataBase.getUserByName("UserName0")).willReturn(new User("Vladimir", "Vladimirov"));
     }
 
     @Test

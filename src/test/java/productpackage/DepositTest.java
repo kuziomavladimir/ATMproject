@@ -53,7 +53,7 @@ class DepositTest {
 
     @Test
     void getBalance() {
-        Deposit deposit = new Deposit("40817810009785654512", "RUR", 12);
+        Deposit deposit = new Deposit("40817810009785654592", "RUR", 12);
 
         Set<ConstraintViolation<Deposit>> validationSet = validator.validate(deposit);
         for (ConstraintViolation<Deposit> violation: validationSet) {
