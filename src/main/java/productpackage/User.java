@@ -11,6 +11,8 @@ import java.util.List;
 public class User {
     private String name;
     private String surname;
+    @Email
+    private String eMail;
     private List<BankProduct> productList;
 
     public User(String name, String surname) {

@@ -1,3 +1,4 @@
+
 package productpackage;
 
 import ATMpackage.Transaction;
@@ -13,6 +14,7 @@ import java.util.List;
 public class Deposit implements BankProduct {
         private final String number;
         private final String currency;
+        @Min(0)
         private double balance;             //:todo изменить на бигдесимал
         private List<Transaction> transactionList;
 
