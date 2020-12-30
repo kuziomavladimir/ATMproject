@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 public class ATM {
     // Основной класс с бизнесс-методами, моделирует функции банкомата, входит в доменную модель
 
-    private DataBaseHandler dataBaseHandler;   // Вынести на уровень контроллера
+    private DataBaseHandler dataBaseHandler;   //todo: Вынести на уровень контроллера
 
     public void authentication(Card userCard, String userPinCode) throws IncorrectPinException {
         // Аутентификация
