@@ -5,6 +5,7 @@ import lombok.*;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Size;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,21 +13,24 @@ import java.util.List;
 @Setter
 @ToString
 public class Card implements BankProduct {
+    private final int userId;
     private final String number;
-    private final String currency;
     @Size(max = 4, min = 4)
     private String pinCode;
-    private double balance;
+    private final String currency;
+    private BigDecimal balance;
     @Max(3)
     private int tryesEnterPin;      // Оставшиеся попытки ввода пин-кода
     private List<Transaction> transactionList;
 
-    public Card(String number, String pinCode, String currency, double balance) {
+    public Card(int userId, String number, String pinCode, String currency, BigDecimal balance, int tryesEnterPin) {
+        this.userId = userId;
         this.number = number;
         this.pinCode = pinCode;
         this.currency = currency;
         this.balance = balance;
-        tryesEnterPin = 3;
+        this.tryesEnterPin = tryesEnterPin;
         transactionList = new ArrayList<>();
+
     }
 }

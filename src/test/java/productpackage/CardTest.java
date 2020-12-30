@@ -12,6 +12,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import java.math.BigDecimal;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +50,7 @@ class CardTest {
 
         assertTimeout(Duration.ofMillis(10), () -> {
             for (int i = 0; i <= 10000; i++)
-                cardList.add(new Card("1234", "1", "RUR", 1000));
+                cardList.add(new Card(1, "1234", "1", "RUR", new BigDecimal(1000), 3));
         }, () -> "Тест выполняется больше 10 милисекунд");
     }
 }

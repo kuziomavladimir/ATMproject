@@ -12,6 +12,7 @@ import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,7 +30,7 @@ class DepositTest {
 
     @Test
     void getBalance() {
-        Deposit deposit = new Deposit("40817810009785654592", "RUR", 12);
+        Deposit deposit = new Deposit("40817810009785654592", "RUR", new BigDecimal(12));
 
         Set<ConstraintViolation<Deposit>> validationSet = validator.validate(deposit);
         for (ConstraintViolation<Deposit> violation: validationSet) {

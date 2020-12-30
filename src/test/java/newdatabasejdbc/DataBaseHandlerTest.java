@@ -3,8 +3,11 @@ package newdatabasejdbc;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import productpackage.Card;
 
+import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -34,15 +37,15 @@ class DataBaseHandlerTest {
 //            statement.executeBatch();
 //            statement.clearBatch();
 
-            ResultSet resultSet = statement.executeQuery("SELECT  * FROM users");
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
 
             while (resultSet.next()) {
-                int id = resultSet.getInt("id");
+                int user_id = resultSet.getInt("user_id");
                 String name = resultSet.getString("user_name");
                 String surname = resultSet.getString("surname");
                 String birthday = resultSet.getString("birthday");
                 String email = resultSet.getString("email");
-                log.info(Integer.toString(id) + "\t" + name + "\t" + surname + "\t" + birthday + "\t" + email);
+                log.info(Integer.toString(user_id) + "\t" + name + "\t" + surname + "\t" + birthday + "\t" + email);
             }
 
         } catch (SQLException e) {
@@ -58,9 +61,9 @@ class DataBaseHandlerTest {
             if(!dbConnection.isClosed()) {
                 log.info("Соединение с бд установлено");
             }
-            String insertNew = "INSERT INTO users VALUES(?,?,?,?,?)";
+            String insertNew = "INSERT INTO users VALUES(?,?,?,?)";
 
-//            PreparedStatement preparedStatement = dbConnection.prepareStatement(insertNew);
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(insertNew);
 //            preparedStatement.setInt(1, 33);
 //            preparedStatement.setString(2, "Vasiliy");
 //            preparedStatement.setString(3, "Zubov");
@@ -72,4 +75,53 @@ class DataBaseHandlerTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    void setUp3() {
+        try(Connection dbConnection = DriverManager.getConnection(URL, DBUSERNAME, DBPASSWORD)) {
+            if(!dbConnection.isClosed()) {
+                log.info("Соединение с бд установлено");
+            }
+            String insertNew = "SELECT * FROM users";
+
+            PreparedStatement preparedStatement = dbConnection.prepareStatement(insertNew);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                log.info(resultSet.getDate("birthday").toString());
+            }
+
+//            preparedStatement.setInt(1, 33);
+//            preparedStatement.setString(2, "Vasiliy");
+//            preparedStatement.setString(3, "Zubov");
+//            preparedStatement.setString(4, "1992-06-29");
+//            preparedStatement.setString(5, "fjiekghdfklghdf@rambler.ru");
+//            preparedStatement.execute();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    void setUp4() {
+        DataBaseHandler dataBaseHandler = null;
+        Card card = null;
+
+        try {
+            dataBaseHandler = new DataBaseHandler();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            card = dataBaseHandler.searchCard("4279600099999999");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        System.out.println(card);
+        card.setBalance(new BigDecimal("7000000"));
+
+        dataBaseHandler.updateCard(card);
+    }
+
 }

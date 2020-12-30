@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Getter
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class Transaction {
     private LocalDate localDate;
-    private double amount;
+    private BigDecimal amount;
     private String currency;
     private String transactionType;  //todo: Расход или приход продумать
 
