@@ -1,5 +1,6 @@
 package newdatabasejdbc;
 
+import ATMpackage.Transaction;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,6 +9,7 @@ import productpackage.Card;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -122,6 +124,25 @@ class DataBaseHandlerTest {
         card.setBalance(new BigDecimal("7000000"));
 
         dataBaseHandler.updateCard(card);
+    }
+
+    @Test
+    void setUp5() {
+//        LocalDateTime localDateTime = LocalDateTime.now().now();
+//        System.out.println(localDateTime);
+
+        DataBaseHandler dataBaseHandler = null;
+        try {
+            dataBaseHandler = new DataBaseHandler();
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        Transaction transaction = new Transaction(LocalDateTime.now(), new BigDecimal(87987977), "RUR", "Приход");
+
+        dataBaseHandler.updateTransactions("5469600088888888", transaction);
+
+
+
     }
 
 }

@@ -12,3 +12,9 @@ SELECT * FROM cards WHERE number = '4279600099999999'
 #update cards set balance = 7000000000000 where user_id = 9;
 
 #delete from users where user_name = 'Petr';
+
+# CREATE TABLE `atm_schema`.`5469600077777777` (
+#                                                  `local_date` DATETIME NOT NULL,
+#                                                  `amount` DECIMAL(20) NULL,
+#                                                  `currency` VARCHAR(45) NULL,
+#                                                  `transaction_type` VARCHAR(45) NULL);

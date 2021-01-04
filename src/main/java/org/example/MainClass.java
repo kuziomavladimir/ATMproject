@@ -1,15 +1,11 @@
 package org.example;
 
 import ATMpackage.ScriptsController;
-import databasepackage.DataBase;
 import lombok.extern.slf4j.Slf4j;
 import newdatabasejdbc.DataBaseHandler;
-import org.slf4j.Logger;
-import productpackage.BankProduct;
 
 import java.sql.SQLException;
 import java.util.Scanner;
-import java.util.function.Consumer;
 
 @Slf4j
 public class MainClass {
@@ -23,7 +19,7 @@ public class MainClass {
             e.printStackTrace();
             System.exit(1);
         }
-        ScriptsController scriptsController = new ScriptsController(dataBaseHandler);
+//        ScriptsController scriptsController = new ScriptsController(dataBaseHandler);
 
         Scanner s = new Scanner(System.in);
         String str;

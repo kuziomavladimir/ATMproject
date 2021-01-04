@@ -1,9 +1,17 @@
 package newdatabasejdbc;
 
+import ATMpackage.Transaction;
 import lombok.extern.slf4j.Slf4j;
 import productpackage.Card;
 
+import java.math.BigDecimal;
 import java.sql.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.ZoneOffset;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class DataBaseHandler {
@@ -53,8 +61,50 @@ public class DataBaseHandler {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-
     }
 
+    public void updateTransactions(String cardNumber, Transaction transaction) {
+        String insertRequest = "INSERT INTO `" + DBNAME + "`.`" + cardNumber + "` (local_date, amount, currency, transaction_type) VALUES('" + transaction.getLocalDateTime() +
+                "', " + transaction.getAmount() + ", '" + transaction.getCurrency() + "', '" + transaction.getTransactionType() + "');";
+
+        String searchRequest = "SHOW TABLES FROM `" + DBNAME + "` like '" + cardNumber + "';";
+
+        String createRequest = "CREATE TABLE `" + DBNAME + "`.`" + cardNumber + "` (`local_date` DATETIME NOT NULL, `amount` DECIMAL(20) NULL," +
+                " `currency` VARCHAR(45) NULL, `transaction_type` VARCHAR(45) NULL);";
+
+        try (PreparedStatement preparedStatement = dbConnection.prepareStatement(searchRequest)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                log.info("table +");
+                preparedStatement.executeUpdate(insertRequest);
+            } else {
+                log.info("table -");
+                preparedStatement.executeUpdate(createRequest);
+                preparedStatement.executeUpdate(insertRequest);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Transaction> searchTransactions(String cardNumber) {
+        List<Transaction> transactionList = new ArrayList<>();
+        String searchRequest = "SELECT * FROM `" + DBNAME + "`.`" + cardNumber + "`;";
+
+        try(PreparedStatement preparedStatement = dbConnection.prepareStatement(searchRequest)) {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while (resultSet.next()) {
+                Timestamp date = resultSet.getTimestamp("local_date");
+
+                BigDecimal amount = resultSet.getBigDecimal("amount");
+                String currency = resultSet.getString("currency");
+                String transactionType = resultSet.getString("transaction_type");
+                transactionList.add(new Transaction(date.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime(), amount, currency, transactionType));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return transactionList;
+    }
 }

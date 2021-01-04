@@ -2,19 +2,13 @@ package ATMpackage;
 
 import lombok.extern.slf4j.Slf4j;
 import newdatabasejdbc.DataBaseHandler;
-import productpackage.BankProduct;
 import productpackage.Card;
 import customExeptions.IncorrectPinException;
 import customExeptions.NegativeBalanceException;
-import databasepackage.DataBase;
-import productpackage.Deposit;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 import java.util.Scanner;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 @Slf4j
 public class ScriptsController {
@@ -31,7 +25,7 @@ public class ScriptsController {
 
     public ScriptsController(DataBaseHandler dataBaseHandler) {
         this.dataBaseHandler = dataBaseHandler;
-        myATM = new ATM(dataBaseHandler);
+        myATM = new ATM();
         scanner = new Scanner(System.in);
     }
 
@@ -40,10 +34,15 @@ public class ScriptsController {
 
         try {
             searching();
-        } catch (IncorrectPinException | SQLException e) {
+        } catch (IncorrectPinException e) {
+            log.warn(e.toString());
+            dataBaseHandler.updateCard(card);
+            return;
+        } catch (SQLException e) {
             log.warn(e.toString());
             return;
         }
+        dataBaseHandler.updateCard(card);
         log.info("Баланс карты {} равен: {}\t{}", card.getNumber(), card.getBalance(), card.getCurrency());
     }
 
@@ -52,10 +51,15 @@ public class ScriptsController {
 
         try {
             searching();
-        } catch (IncorrectPinException | SQLException e) {
+        } catch (IncorrectPinException e) {
+            log.warn(e.toString());
+            dataBaseHandler.updateCard(card);
+            return;
+        } catch (SQLException e) {
             log.warn(e.toString());
             return;
         }
+        dataBaseHandler.updateCard(card);
 
         Card recipientCard;
         log.info("Введите номер карты получателя:\t");
@@ -72,24 +76,35 @@ public class ScriptsController {
         BigDecimal amountSum = new BigDecimal(scanner.nextLine());
 
         try {
-            myATM.transferPToP(card, recipientCard, amountSum);
+            Transaction transaction = myATM.transferPToP(card, recipientCard, amountSum);
+            dataBaseHandler.updateCard(card);
+            dataBaseHandler.updateCard(recipientCard);
+
+            dataBaseHandler.updateTransactions(card.getNumber(), transaction);
+            dataBaseHandler.updateTransactions(recipientCard.getNumber(), new Transaction(transaction, "приход"));
         } catch (NegativeBalanceException e) {
             log.warn(e.toString());
             return;
         }
-        dataBaseHandler.updateCard(card);
+
     }
 
     public void showTransactions() {
         // Сценарий показа транзакций
+
         try {
             searching();
-        } catch (IncorrectPinException | SQLException e) {
+        } catch (IncorrectPinException e) {
+            log.warn(e.toString());
+            dataBaseHandler.updateCard(card);
+            return;
+        } catch (SQLException e) {
             log.warn(e.toString());
             return;
         }
+        dataBaseHandler.updateCard(card);
 
-        for(Transaction transaction: card.getTransactionList()) {
+        for(Transaction transaction: dataBaseHandler.searchTransactions(card.getNumber())) {
             log.info(transaction.toString());
         }
     }
