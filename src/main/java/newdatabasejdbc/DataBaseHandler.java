@@ -1,6 +1,7 @@
 package newdatabasejdbc;
 
 import ATMpackage.Transaction;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import productpackage.Card;
 
@@ -22,6 +23,7 @@ public class DataBaseHandler {
     private static final String DBPASSWORD = "12345";
     private static final String DBNAME = "atm_schema";
     private String URL = "jdbc:mysql://" + DBHOST + ":" + DBPORT + "/" + DBNAME + "?useUnicode=true&serverTimezone=UTC";
+    @Getter
     private Connection dbConnection;
 
     public DataBaseHandler() throws SQLException {
@@ -54,7 +56,7 @@ public class DataBaseHandler {
 
     public void updateCard(Card card) {
         String updateRequest = "UPDATE cards SET pin_code = '" + card.getPinCode() + "', balance = " + card.getBalance()
-                + ", tryes_enter_pin = " + card.getTryesEnterPin() + " where number = " + card.getNumber() + ";";
+                + ", tryes_enter_pin = " + card.getTryesEnterPin() + " WHERE number = " + card.getNumber() + ";";
 
         try (PreparedStatement preparedStatement = dbConnection.prepareStatement(updateRequest)) {
             preparedStatement.executeUpdate();
@@ -67,7 +69,7 @@ public class DataBaseHandler {
         String insertRequest = "INSERT INTO `" + DBNAME + "`.`" + cardNumber + "` (local_date, amount, currency, transaction_type) VALUES('" + transaction.getLocalDateTime() +
                 "', " + transaction.getAmount() + ", '" + transaction.getCurrency() + "', '" + transaction.getTransactionType() + "');";
 
-        String searchRequest = "SHOW TABLES FROM `" + DBNAME + "` like '" + cardNumber + "';";
+        String searchRequest = "SHOW TABLES FROM `" + DBNAME + "` LIKE '" + cardNumber + "';";
 
         String createRequest = "CREATE TABLE `" + DBNAME + "`.`" + cardNumber + "` (`local_date` DATETIME NOT NULL, `amount` DECIMAL(20) NULL," +
                 " `currency` VARCHAR(45) NULL, `transaction_type` VARCHAR(45) NULL);";
@@ -96,10 +98,10 @@ public class DataBaseHandler {
 
             while (resultSet.next()) {
                 Timestamp date = resultSet.getTimestamp("local_date");
-
                 BigDecimal amount = resultSet.getBigDecimal("amount");
                 String currency = resultSet.getString("currency");
                 String transactionType = resultSet.getString("transaction_type");
+
                 transactionList.add(new Transaction(date.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime(), amount, currency, transactionType));
             }
         } catch (SQLException e) {

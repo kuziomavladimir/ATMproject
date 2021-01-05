@@ -41,4 +41,7 @@ public class MainClass {
         } while (!str.equals("q"));
 
     }
+
+    //todo: изменить структуру пакетов на 3 уровня: UI, Domain, DAO
+    //todo: не делать запрос напрямую из UI в DAO (только через Domain, продумать как сделать)
 }

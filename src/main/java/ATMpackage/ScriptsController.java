@@ -8,6 +8,7 @@ import customExeptions.NegativeBalanceException;
 
 import java.math.BigDecimal;
 import java.sql.SQLException;
+import java.sql.Savepoint;
 import java.util.Scanner;
 
 @Slf4j
@@ -74,19 +75,33 @@ public class ScriptsController {
 
         log.info("Введите сумму перевода:\t");
         BigDecimal amountSum = new BigDecimal(scanner.nextLine());
+        Savepoint savepoint = null;
 
         try {
             Transaction transaction = myATM.transferPToP(card, recipientCard, amountSum);
+
+            dataBaseHandler.getDbConnection().setAutoCommit(false);
+            savepoint = dataBaseHandler.getDbConnection().setSavepoint();
+
             dataBaseHandler.updateCard(card);
             dataBaseHandler.updateCard(recipientCard);
-
             dataBaseHandler.updateTransactions(card.getNumber(), transaction);
             dataBaseHandler.updateTransactions(recipientCard.getNumber(), new Transaction(transaction, "приход"));
+
+            dataBaseHandler.getDbConnection().commit();
         } catch (NegativeBalanceException e) {
             log.warn(e.toString());
             return;
+        } catch (SQLException e) {
+            try {
+                dataBaseHandler.getDbConnection().rollback(savepoint);
+                log.warn(e.toString());
+                return;
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+                return;
+            }
         }
-
     }
 
     public void showTransactions() {

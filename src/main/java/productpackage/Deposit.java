@@ -16,7 +16,7 @@ public class Deposit implements BankProduct {
         private final String number;
         private final String currency;
         @Min(0)
-        private BigDecimal balance;             //:todo изменить на бигдесимал
+        private BigDecimal balance;
         private List<Transaction> transactionList;
 
         public Deposit(String number, String currency, BigDecimal balance) {
