@@ -1,20 +1,16 @@
-package newdatabasejdbc;
+package dao;
 
-import ATMpackage.Transaction;
+import domain.entity.Transaction;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import productpackage.Card;
+import domain.entity.Card;
 
 import java.math.BigDecimal;
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @Slf4j
-class DataBaseHandlerTest {
+class DaoHandlerTest {
 
     private static final String DBHOST = "localhost";
     private static final String DBPORT = "3306";
@@ -106,24 +102,20 @@ class DataBaseHandlerTest {
 
     @Test
     void setUp4() {
-        DataBaseHandler dataBaseHandler = null;
+        DaoHandler DAOHandler = null;
         Card card = null;
 
-        try {
-            dataBaseHandler = new DataBaseHandler();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        DAOHandler = new DaoHandler();
 
         try {
-            card = dataBaseHandler.searchCard("4279600099999999");
-        } catch (SQLException e) {
+            card = DAOHandler.searchCard("4279600099999999");
+        } catch (DaoException e) {
             e.printStackTrace();
         }
         System.out.println(card);
         card.setBalance(new BigDecimal("7000000"));
 
-        dataBaseHandler.updateCard(card);
+//        DAOHandler.updateCard(card);
     }
 
     @Test
@@ -131,15 +123,11 @@ class DataBaseHandlerTest {
 //        LocalDateTime localDateTime = LocalDateTime.now().now();
 //        System.out.println(localDateTime);
 
-        DataBaseHandler dataBaseHandler = null;
-        try {
-            dataBaseHandler = new DataBaseHandler();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
+        DaoHandler DAOHandler = null;
+        DAOHandler = new DaoHandler();
         Transaction transaction = new Transaction(LocalDateTime.now(), new BigDecimal(87987977), "RUR", "Приход");
 
-        dataBaseHandler.updateTransactions("5469600088888888", transaction);
+//        DAOHandler.updateTransactions("5469600088888888", transaction);
 
 
 

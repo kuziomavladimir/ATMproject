@@ -1,8 +1,7 @@
-package org.example;
+package ui;
 
-import ATMpackage.ScriptsController;
 import lombok.extern.slf4j.Slf4j;
-import newdatabasejdbc.DataBaseHandler;
+import dao.DaoHandler;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -11,37 +10,26 @@ import java.util.Scanner;
 public class MainClass {
 
     public static void main(String[] args) {
-
-        DataBaseHandler dataBaseHandler = null;
-        try {
-            dataBaseHandler = new DataBaseHandler();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-//        ScriptsController scriptsController = new ScriptsController(dataBaseHandler);
-
         Scanner s = new Scanner(System.in);
         String str;
-
         do {
             log.info("1 - проверить баланс, 2 - сделать перевод, 3 - Показать историю операций, q - выход");
             str = s.nextLine();
             switch (str) {
                 case "1":
-                    new ScriptsController(dataBaseHandler).doCheckBalance();
+                    new ScriptsController().doCheckBalance();
                     break;
                 case "2":
-                    new ScriptsController(dataBaseHandler).doTransfer();
+                    new ScriptsController().doTransfer();
                     break;
                 case "3":
-                    new ScriptsController(dataBaseHandler).showTransactions();
+                    new ScriptsController().showTransactions();
                     break;
             }
         } while (!str.equals("q"));
-
     }
 
+    //todo: добавитьь коды отказов енум в транзакции
     //todo: изменить структуру пакетов на 3 уровня: UI, Domain, DAO
     //todo: не делать запрос напрямую из UI в DAO (только через Domain, продумать как сделать)
 }

@@ -1,11 +1,9 @@
-package productpackage;
+package domain.entity;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
 
 import org.junit.jupiter.api.Test;
-import productpackage.Card;
-import productpackage.User;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;

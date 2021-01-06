@@ -1,4 +1,4 @@
-package productpackage;
+package domain.entity;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,6 @@ public class User {
     private LocalDate birthday; //todo: переопределить сеттер, чтобы принимал строку
     @Email
     private String eMail;
-    private List<BankProduct> productList;
 
     public User(String name, String surname) {
         this.name = name;

@@ -1,6 +1,5 @@
-package productpackage;
+package domain.entity;
 
-import ATMpackage.Transaction;
 import lombok.*;
 
 import javax.validation.constraints.Max;
@@ -12,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-public class Card implements BankProduct {
+public class Card {
     private final int userId;
     private final String number;
     @Size(max = 4, min = 4)
@@ -21,7 +20,6 @@ public class Card implements BankProduct {
     private BigDecimal balance;
     @Max(3)
     private int tryesEnterPin;      // Оставшиеся попытки ввода пин-кода
-    private List<Transaction> transactionList;
 
     public Card(int userId, String number, String pinCode, String currency, BigDecimal balance, int tryesEnterPin) {
         this.userId = userId;
@@ -30,7 +28,5 @@ public class Card implements BankProduct {
         this.currency = currency;
         this.balance = balance;
         this.tryesEnterPin = tryesEnterPin;
-        transactionList = new ArrayList<>();
-
     }
 }
