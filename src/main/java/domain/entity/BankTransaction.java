@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @AllArgsConstructor
-public class Transaction {
+public class BankTransaction {
     private LocalDateTime localDateTime;
     private BigDecimal amount;
     private String currency;
     private String transactionType;  //todo: Расход или приход продумать
 
-    public Transaction(Transaction transaction, String transactionType) {
+    public BankTransaction(BankTransaction transaction, String transactionType) {
         this.localDateTime = transaction.getLocalDateTime();
         this.amount = transaction.getAmount();
         this.currency = transaction.getCurrency();

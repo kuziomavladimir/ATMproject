@@ -2,7 +2,7 @@ package ui;
 
 import dao.DaoException;
 import domain.ATM;
-import domain.entity.Transaction;
+import domain.entity.BankTransaction;
 import lombok.extern.slf4j.Slf4j;
 import dao.DaoHandler;
 import domain.entity.Card;
@@ -95,7 +95,7 @@ public class ScriptsController {
         }
 
         try {
-            for(Transaction transaction: myATM.searchTransactions(card)) {
+            for(BankTransaction transaction: myATM.searchTransactions(card)) {
                 log.info(transaction.toString());
             }
         } catch (DaoException e) {

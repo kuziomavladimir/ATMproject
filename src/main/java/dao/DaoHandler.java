@@ -1,6 +1,6 @@
 package dao;
 
-import domain.entity.Transaction;
+import domain.entity.BankTransaction;
 import lombok.extern.slf4j.Slf4j;
 import domain.entity.Card;
 
@@ -19,6 +19,8 @@ public class DaoHandler {
     private static final String DBPASSWORD = "12345";
     private static final String DBNAME = "atm_schema";
     private String URL = "jdbc:mysql://" + DBHOST + ":" + DBPORT + "/" + DBNAME + "?useUnicode=true&serverTimezone=UTC";
+//    private String URL = "jdbc:mysql://localhost:3306/atm_schema";
+//    Class.forName("com.mysql.jdbc.Driver");
 
     public Card searchCard(String cardNumber) throws DaoException {
         // Стоит ли бизнес-объект card инициализировать в этом классе DAO???
@@ -61,13 +63,13 @@ public class DaoHandler {
         }
     }
 
-    public void updateCardsP2P(Card card1, Card card2, Transaction transaction) throws DaoException {
+    public void updateCardsP2P(Card card1, Card card2, BankTransaction transaction) throws DaoException {
         String updateRequestCard1 = "UPDATE cards SET pin_code = '" + card1.getPinCode() + "', balance = " + card1.getBalance()
                 + ", tryes_enter_pin = " + card1.getTryesEnterPin() + " WHERE number = " + card1.getNumber() + ";";
         String updateRequestCard2 = "UPDATE cards SET pin_code = '" + card2.getPinCode() + "', balance = " + card2.getBalance()
                 + ", tryes_enter_pin = " + card2.getTryesEnterPin() + " WHERE number = " + card2.getNumber() + ";";
 
-        Transaction transactionForCard2 = new Transaction(transaction, "приход");
+        BankTransaction transactionForCard2 = new BankTransaction(transaction, "приход");
 
 
         String insertRequestCard1 = "INSERT INTO `" + DBNAME + "`.`" + card1.getNumber() + "` (local_date, amount, currency, transaction_type) VALUES('" + transaction.getLocalDateTime() +
@@ -150,7 +152,7 @@ public class DaoHandler {
         }
     }
 
-    public void updateTransaction(String cardNumber, Transaction transaction) throws DaoException {
+    public void updateTransaction(String cardNumber, BankTransaction transaction) throws DaoException {
         String insertRequest = "INSERT INTO `" + DBNAME + "`.`" + cardNumber + "` (local_date, amount, currency, transaction_type) VALUES('" + transaction.getLocalDateTime() +
                 "', " + transaction.getAmount() + ", '" + transaction.getCurrency() + "', '" + transaction.getTransactionType() + "');";
 
@@ -177,8 +179,8 @@ public class DaoHandler {
         }
     }
 
-    public List<Transaction> searchTransactions(String cardNumber) throws DaoException {
-        List<Transaction> transactionList = new ArrayList<>();
+    public List<BankTransaction> searchTransactions(String cardNumber) throws DaoException {
+        List<BankTransaction> transactionList = new ArrayList<>();
         String searchRequest = "SELECT * FROM `" + DBNAME + "`.`" + cardNumber + "`;";
 
         try(Connection connection = DriverManager.getConnection(URL, DBUSERNAME, DBPASSWORD);
@@ -190,7 +192,7 @@ public class DaoHandler {
                 BigDecimal amount = resultSet.getBigDecimal("amount");
                 String currency = resultSet.getString("currency");
                 String transactionType = resultSet.getString("transaction_type");
-                transactionList.add(new Transaction(date.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime(), amount, currency, transactionType));
+                transactionList.add(new BankTransaction(date.toInstant().atZone(ZoneOffset.UTC).toLocalDateTime(), amount, currency, transactionType));
             }
             return transactionList;
         } catch (SQLException e) {

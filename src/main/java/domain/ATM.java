@@ -2,7 +2,7 @@ package domain;
 
 import dao.DaoException;
 import dao.DaoHandler;
-import domain.entity.Transaction;
+import domain.entity.BankTransaction;
 import lombok.AllArgsConstructor;
 import domain.entity.Card;
 import domain.customExeptions.IncorrectPinException;
@@ -40,7 +40,7 @@ public class ATM {
             throws NegativeBalanceException, DaoException {
         // Перевод с карты на карту или на вклад
 
-        Transaction transaction = new Transaction(LocalDateTime.now(), amount, senderCard.getCurrency(), "Расход");
+        BankTransaction transaction = new BankTransaction(LocalDateTime.now(), amount, senderCard.getCurrency(), "Расход");
         if(senderCard.getBalance().compareTo(amount) >= 0) {
             senderCard.setBalance(senderCard.getBalance().subtract(amount));
             recipientCard.setBalance(recipientCard.getBalance().add(amount));
@@ -51,7 +51,7 @@ public class ATM {
         }
     }
 
-    public List<Transaction> searchTransactions(Card card) throws DaoException {
+    public List<BankTransaction> searchTransactions(Card card) throws DaoException {
         return daoHandler.searchTransactions(card.getNumber());
     }
 

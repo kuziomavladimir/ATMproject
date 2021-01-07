@@ -1,6 +1,6 @@
 package dao;
 
-import domain.entity.Transaction;
+import domain.entity.BankTransaction;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import domain.entity.Card;
@@ -125,7 +125,7 @@ class DaoHandlerTest {
 
         DaoHandler DAOHandler = null;
         DAOHandler = new DaoHandler();
-        Transaction transaction = new Transaction(LocalDateTime.now(), new BigDecimal(87987977), "RUR", "Приход");
+        BankTransaction transaction = new BankTransaction(LocalDateTime.now(), new BigDecimal(87987977), "RUR", "Приход");
 
 //        DAOHandler.updateTransactions("5469600088888888", transaction);
 

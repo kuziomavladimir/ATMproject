@@ -1,9 +1,6 @@
 package ui;
 
 import lombok.extern.slf4j.Slf4j;
-import dao.DaoHandler;
-
-import java.sql.SQLException;
 import java.util.Scanner;
 
 @Slf4j
@@ -32,4 +29,5 @@ public class MainClass {
     //todo: добавитьь коды отказов енум в транзакции
     //todo: изменить структуру пакетов на 3 уровня: UI, Domain, DAO
     //todo: не делать запрос напрямую из UI в DAO (только через Domain, продумать как сделать)
+    //todo: перевести работу с базой из jdbc на hibernate
 }
