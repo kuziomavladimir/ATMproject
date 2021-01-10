@@ -22,17 +22,15 @@ class DaoHiberHandlerTest {
 
     @BeforeEach
     void setUp() {
-
     }
 
     @Test
-    void testSessionInsert() {
-        User user = new User("Alala", "Ivasanova", new Date(), "a78lka@yandex.com" );
-
+    void sessionInsertTest() {
+        User user = new User("Alala", "Ivanova", new Date(), "a788lka@yandex.com" );
 
 //        StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
 //        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
 
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
@@ -41,21 +39,23 @@ class DaoHiberHandlerTest {
 
         transaction.commit();
         session.close();
+        sessionFactory.close();
     }
 
     @Test
-    void testSessionRead() {
+    void sessionReadTest() {
 //        StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 //        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
 
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        List<User> userList = session.createQuery("FROM User").list();
+        List<User> userList = session.createQuery("FROM User u ORDER BY u.id").list();    //todo: выучить язык HQL, и критерия
 
         transaction.commit();
         session.close();
+        sessionFactory.close();
 
         for(User user: userList) {
             System.out.println(user);
@@ -63,43 +63,46 @@ class DaoHiberHandlerTest {
     }
 
     @Test
-    void testSessionUpdate() {
-        int iserId = 37;
+    void sessionUpdateTest() {
+        int userId = 41;
 //        StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 //        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
 
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        User user = session.get(User.class, iserId);    // поиск юзера по id
+        User user = session.get(User.class, userId);    // поиск юзера по id
 
         user.setName("Andrey");
         user.setSurname("Gugu");
         user.seteMail("guna@mail.ru");
 
         session.update(user);
+
         transaction.commit();
         session.close();
+        sessionFactory.close();
 
         System.out.println(user);
     }
 
     @Test
-    void testSessionDelete() {
-        int iserId = 37;
+    void sessionDeleteTest() {
+        int userId = 42;
 //        StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
-        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 //        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
 
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        User user = session.get(User.class, iserId);    // поиск юзера по id
+        User user = session.get(User.class, userId);    // поиск юзера по id
         session.delete(user);
 
         transaction.commit();
         session.close();
+        sessionFactory.close();
     }
 
 
