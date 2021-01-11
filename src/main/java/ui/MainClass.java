@@ -1,5 +1,6 @@
 package ui;
 
+import dao.DaoHiberHandler;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Scanner;
 
@@ -8,22 +9,24 @@ public class MainClass {
 
     public static void main(String[] args) {
         Scanner s = new Scanner(System.in);
+        ScriptsController scriptsController = new ScriptsController();
         String str;
         do {
             log.info("1 - проверить баланс, 2 - сделать перевод, 3 - Показать историю операций, q - выход");
             str = s.nextLine();
             switch (str) {
                 case "1":
-                    new ScriptsController().doCheckBalance();
+                    scriptsController.doCheckBalance();
                     break;
                 case "2":
-                    new ScriptsController().doTransfer();
+                    scriptsController.doTransfer();
                     break;
                 case "3":
-                    new ScriptsController().showTransactions();
+//                    scriptsController.showTransactions();
                     break;
             }
         } while (!str.equals("q"));
+        DaoHiberHandler.closeSessionFactory();
     }
 
     //todo: добавитьь коды отказов енум в транзакции

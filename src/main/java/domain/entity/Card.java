@@ -15,24 +15,36 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-//@Entity
-//@Table(name = "cards")
+@Entity
+@Table(name = "cards")
 public class Card {
 
 //    @ManyToOne(fetch = FetchType.LAZY)
 //    @JoinColumn(name = "user_id")
 //    private User user;
 
-//    @Id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "card_id")
+    private int cardId;
+
+    @Column(name = "user_id")
     private int userId;
 
+    @Column(name = "number")
     private String number;
 
+    @Column(name = "pin_code")
     @Size(max = 4, min = 4)
     private String pinCode;
+
+    @Column(name = "currency")
     private String currency;
+
+    @Column(name = "balance")
     private BigDecimal balance;
 
+    @Column(name = "tryes_enter_pin")
     @Max(3)
     private int tryesEnterPin;      // Оставшиеся попытки ввода пин-кода
 }

@@ -1,6 +1,7 @@
 package ui;
 
 import dao.DaoException;
+import dao.DaoHiberHandler;
 import domain.ATM;
 import domain.entity.BankTransaction;
 import lombok.extern.slf4j.Slf4j;
@@ -22,11 +23,9 @@ public class ScriptsController {
     private Scanner scanner;
     private String userCardNumber;
     private String userPinCode;
-    private DaoHandler daoHandler;
 
     public ScriptsController() {
-        daoHandler = new DaoHandler();
-        myATM = new ATM(daoHandler);
+        myATM = new ATM();
         scanner = new Scanner(System.in);
     }
 
@@ -81,28 +80,28 @@ public class ScriptsController {
         }
     }
 
-    public void showTransactions() {
-        // Сценарий показа транзакций
-
-        try {
-            searching();
-        } catch (IncorrectPinException e) {
-            log.warn(e.toString());
-            return;
-        } catch (DaoException e) {
-            log.warn(e.toString());
-            return;
-        }
-
-        try {
-            for(BankTransaction transaction: myATM.searchTransactions(card)) {
-                log.info(transaction.toString());
-            }
-        } catch (DaoException e) {
-            log.warn(e.toString());
-            return;
-        }
-    }
+//    public void showTransactions() {
+//        // Сценарий показа транзакций
+//
+//        try {
+//            searching();
+//        } catch (IncorrectPinException e) {
+//            log.warn(e.toString());
+//            return;
+//        } catch (DaoException e) {
+//            log.warn(e.toString());
+//            return;
+//        }
+//
+//        try {
+//            for(BankTransaction transaction: myATM.searchTransactions(card)) {
+//                log.info(transaction.toString());
+//            }
+//        } catch (DaoException e) {
+//            log.warn(e.toString());
+//            return;
+//        }
+//    }
 
     private void searching() throws DaoException, IncorrectPinException {
         // Сценарий поиска карты

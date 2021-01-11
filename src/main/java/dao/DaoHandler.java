@@ -36,7 +36,7 @@ public class DaoHandler {
             log.info("Подключение выполнено");
 
             while (resultSet.next()) {
-                card = new Card(resultSet.getInt("user_id"), resultSet.getString("number"), resultSet.getString("pin_code"),
+                card = new Card(resultSet.getInt("card_id"), resultSet.getInt("user_id"), resultSet.getString("number"), resultSet.getString("pin_code"),
                         resultSet.getString("currency"), resultSet.getBigDecimal("balance"), resultSet.getInt("tryes_enter_pin"));
             }
             if (card == null) {

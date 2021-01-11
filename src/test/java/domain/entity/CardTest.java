@@ -48,7 +48,7 @@ class CardTest {
 
         assertTimeout(Duration.ofMillis(10), () -> {
             for (int i = 0; i <= 10000; i++)
-                cardList.add(new Card(1, "1234", "1", "RUR", new BigDecimal(1000), 3));
+                cardList.add(new Card(1,1, "1234", "1", "RUR", new BigDecimal(1000), 3));
         }, () -> "Тест выполняется больше 10 милисекунд");
     }
 }

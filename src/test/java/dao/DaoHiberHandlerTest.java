@@ -1,6 +1,8 @@
 package dao;
 
+import domain.entity.Card;
 import domain.entity.User;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -12,12 +14,14 @@ import org.hibernate.cfg.Configuration;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Slf4j
 class DaoHiberHandlerTest {
 
     @BeforeEach
@@ -103,6 +107,93 @@ class DaoHiberHandlerTest {
         transaction.commit();
         session.close();
         sessionFactory.close();
+    }
+
+    @Test
+    void searchCardListTest() {
+//        StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
+//        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
+
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        List<Card> cardList = session.createQuery("FROM Card c ORDER BY c.id").list();    //todo: выучить язык HQL, и критерия
+
+        transaction.commit();
+        session.close();
+        sessionFactory.close();
+
+        for(Card card: cardList) {
+            System.out.println(card);
+        }
+    }
+
+    @Test
+    void searchCardByNumberTest() throws DaoException {
+//        StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
+//        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
+
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+//        Card card = session.get(Card.class, 4);
+        List<Card> cardList = session.createQuery("FROM Card c WHERE c.number = '4276600022222222'").list();
+
+        if (cardList.isEmpty()) {
+            throw new DaoException("Карта не найдена");
+        }
+
+        transaction.commit();
+        session.close();
+        sessionFactory.close();
+
+        System.out.println(cardList.get(0));
+
+    }
+
+    @Test
+    public void updateCardTest() {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        Card card = new Card(10,3, "5469600088888888", "1100", "RUR", new BigDecimal(1000), 1);
+
+        Card beforeUpdateCard = session.get(Card.class, card.getCardId());
+        beforeUpdateCard.setBalance(card.getBalance());
+        beforeUpdateCard.setTryesEnterPin(card.getTryesEnterPin());
+        session.update(beforeUpdateCard);
+
+        transaction.commit();
+        session.close();
+    }
+
+    @Test
+    public void updateTwoCardsWithTransfer() {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        List<Card> cardList1 = session.createQuery("FROM Card c WHERE c.number = '4276600022222222'").list();
+        Card card1 = cardList1.get(0);
+        List<Card> cardList2 = session.createQuery("FROM Card c WHERE c.number = '4276600011111111'").list();
+        Card card2 = cardList2.get(0);
+        card1.setBalance(new BigDecimal(100000));
+        card2.setBalance(new BigDecimal(105000));
+
+
+        Card beforeUpdatedCard1 = session.get(Card.class, card1.getCardId());
+        beforeUpdatedCard1.setBalance(card1.getBalance());
+        session.update(beforeUpdatedCard1);
+        Card beforeUpdatedCard2 = session.get(Card.class, card2.getCardId());
+        beforeUpdatedCard2.setBalance(card2.getBalance());
+        session.update(beforeUpdatedCard2);
+
+        transaction.commit();
+        log.info("Карта обновлена в БД");
+        session.close();
     }
 
 
