@@ -22,17 +22,16 @@ public class DaoHiberHandler {
         sessionFactory.close();
     }
 
-    public Card searchCardByNumber(String number) throws DaoException {
+    public Card searchCardByNumber(String cardNumber) throws DaoException {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        List<Card> cardList = session.createQuery("FROM Card c WHERE c.number = '" + number + "'").list();
+        List<Card> cardList = session.createQuery("FROM Card c WHERE c.number = '" + cardNumber + "'").list();
 
+        transaction.commit();
         if (cardList.isEmpty()) {
             throw new DaoException("Карта не найдена");
         }
-
-        transaction.commit();
         log.info("Карта найдена");
         session.close();
         return cardList.get(0);
@@ -52,7 +51,7 @@ public class DaoHiberHandler {
         session.close();
     }
 
-    public void updateTwoCardsWithTransfer(Card card1, Card card2, BankTransaction bankTransaction) {
+    public void updateTwoCardsWithTransfer(Card card1, Card card2, BankTransaction bankTransaction1, BankTransaction bankTransaction2) {
         Session session = sessionFactory.openSession();
         Transaction transaction = session.beginTransaction();
 
@@ -64,9 +63,24 @@ public class DaoHiberHandler {
         beforeUpdatedCard2.setBalance(card2.getBalance());
         session.update(beforeUpdatedCard2);
 
+        session.save(bankTransaction1);
+        session.save(bankTransaction2);
+
         transaction.commit();
-        log.info("Карта обновлена в БД");
+        log.info("Карты и транзакции обновлены в БД");
         session.close();
+    }
+
+    public List<BankTransaction> searchTransactionsByCardNumber(String cardNumber) throws DaoException {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        List<BankTransaction> bankTransactionList = session.createQuery("FROM BankTransaction t WHERE t.cardNumber = '" + cardNumber + "' ORDER BY t.localDateTime").list();
+
+        transaction.commit();
+        log.info("Лист транзакций найден");
+        session.close();
+        return bankTransactionList;
     }
 
 }

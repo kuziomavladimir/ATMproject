@@ -1,7 +1,9 @@
 select * from users;
-select * from cards order by user_id;
+# select * from cards order by user_id;
 
-SELECT * FROM cards WHERE number = '4279600099999999'
+SELECT * FROM atm_schema.bank_transactions ORDER BY card_number, date_time;
+
+# SELECT * FROM cards WHERE number = '4279600099999999'
 
 #insert into users (user_name, surname, birthday, email) values('Georgiy', 'Tuntsov', '2001-11-05', 'qwerasdzx@mail.ru');
 

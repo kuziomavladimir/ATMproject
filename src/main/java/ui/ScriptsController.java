@@ -1,11 +1,9 @@
 package ui;
 
 import dao.DaoException;
-import dao.DaoHiberHandler;
 import domain.ATM;
 import domain.entity.BankTransaction;
 import lombok.extern.slf4j.Slf4j;
-import dao.DaoHandler;
 import domain.entity.Card;
 import domain.customExeptions.IncorrectPinException;
 import domain.customExeptions.NegativeBalanceException;
@@ -33,7 +31,7 @@ public class ScriptsController {
         // Сценарий проверки баланса
 
         try {
-            searching();
+            findAndAutenticate();
         } catch (IncorrectPinException e) {
             log.warn(e.toString());
             return;
@@ -48,7 +46,7 @@ public class ScriptsController {
         // Сценарий перевода с карты на карту
 
         try {
-            searching();
+            findAndAutenticate();
         } catch (IncorrectPinException e) {
             log.warn(e.toString());
             return;
@@ -80,30 +78,30 @@ public class ScriptsController {
         }
     }
 
-//    public void showTransactions() {
-//        // Сценарий показа транзакций
-//
-//        try {
-//            searching();
-//        } catch (IncorrectPinException e) {
-//            log.warn(e.toString());
-//            return;
-//        } catch (DaoException e) {
-//            log.warn(e.toString());
-//            return;
-//        }
-//
-//        try {
-//            for(BankTransaction transaction: myATM.searchTransactions(card)) {
-//                log.info(transaction.toString());
-//            }
-//        } catch (DaoException e) {
-//            log.warn(e.toString());
-//            return;
-//        }
-//    }
+    public void showTransactions() {
+        // Сценарий показа транзакций
 
-    private void searching() throws DaoException, IncorrectPinException {
+        try {
+            findAndAutenticate();
+        } catch (IncorrectPinException e) {
+            log.warn(e.toString());
+            return;
+        } catch (DaoException e) {
+            log.warn(e.toString());
+            return;
+        }
+
+        try {
+            for(BankTransaction transaction: myATM.searchTransactions(card)) {
+                log.info(transaction.toString());
+            }
+        } catch (DaoException e) {
+            log.warn(e.toString());
+            return;
+        }
+    }
+
+    private void findAndAutenticate() throws DaoException, IncorrectPinException {
         // Сценарий поиска карты
 
         log.info("Введите номер вашей карты:\t");

@@ -4,25 +4,25 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Getter
 @Setter
 @ToString
-@AllArgsConstructor
 @NoArgsConstructor
-//@Entity
-//@Table
+@Entity
+@Table(name = "bank_transactions")
 public class BankTransaction {
 
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "id")
-//    private int id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private int id;
 
-    @Column(name = "local_date")
+    @Column(name = "card_number")
+    private String cardNumber;
+
+    @Column(name = "date_time")
     private LocalDateTime localDateTime;
 
     @Column(name = "amount")
@@ -32,12 +32,21 @@ public class BankTransaction {
     private String currency;
 
     @Column(name = "transaction_type")
-    private String transactionType;  //todo: Расход или приход продумать
+    private String transactionType;  //todo: тип транзакции сделать енум
 
-    public BankTransaction(BankTransaction transaction, String transactionType) {
+    public BankTransaction(String cardNumber, LocalDateTime localDateTime, BigDecimal amount, String currency, String transactionType) {
+        this.cardNumber = cardNumber;
+        this.localDateTime = localDateTime;
+        this.amount = amount;
+        this.currency = currency;
+        this.transactionType = transactionType;
+    }
+
+    public BankTransaction(BankTransaction transaction, String cardNumber, String transactionType) {
         this.localDateTime = transaction.getLocalDateTime();
         this.amount = transaction.getAmount();
         this.currency = transaction.getCurrency();
         this.transactionType = transactionType;
+        this.cardNumber = cardNumber;
     }
 }

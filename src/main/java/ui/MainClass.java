@@ -22,15 +22,16 @@ public class MainClass {
                     scriptsController.doTransfer();
                     break;
                 case "3":
-//                    scriptsController.showTransactions();
+                    scriptsController.showTransactions();
                     break;
             }
         } while (!str.equals("q"));
         DaoHiberHandler.closeSessionFactory();
     }
 
-    //todo: добавитьь коды отказов енум в транзакции
-    //todo: изменить структуру пакетов на 3 уровня: UI, Domain, DAO
+    //todo: добавить в енум типы транзакций
     //todo: не делать запрос напрямую из UI в DAO (только через Domain, продумать как сделать)
-    //todo: перевести работу с базой из jdbc на hibernate
+    //todo: продумать, нужно ли объединить ATM и ScriptsController (после создания контроллеров на Spring)
+    //todo: настроить запись логирования в файл
+    //todo: привести в порядок тесты
 }

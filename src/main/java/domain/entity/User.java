@@ -5,9 +5,6 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -30,16 +27,13 @@ public class User {
     private String surname;
 
     @Column(name = "birthday")
-    private Date birthday;                      //todo: переопределить сеттер, чтобы принимал строку
+    private LocalDate birthday;
 
     @Email
     @Column(name = "email", unique = true)
     private String eMail;
 
-//    @OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch=FetchType.EAGER)
-//    private Set<Card> cards;
-
-    public User(String name, String surname, Date birthday, @Email String eMail) {
+    public User(String name, String surname, LocalDate birthday, @Email String eMail) {
         this.name = name;
         this.surname = surname;
         this.birthday = birthday;

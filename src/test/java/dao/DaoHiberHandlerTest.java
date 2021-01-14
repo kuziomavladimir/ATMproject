@@ -1,5 +1,6 @@
 package dao;
 
+import domain.entity.BankTransaction;
 import domain.entity.Card;
 import domain.entity.User;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +32,7 @@ class DaoHiberHandlerTest {
 
     @Test
     void sessionInsertTest() {
-        User user = new User("Alala", "Ivanova", new Date(), "a788lka@yandex.com" );
+        User user = new User("Alala", "Ivanova", LocalDate.now(), "a788lka@yandex.com" );
 
 //        StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
 //        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
@@ -62,7 +64,7 @@ class DaoHiberHandlerTest {
         sessionFactory.close();
 
         for(User user: userList) {
-            System.out.println(user);
+            log.info(user.toString());
         }
     }
 
@@ -88,12 +90,12 @@ class DaoHiberHandlerTest {
         session.close();
         sessionFactory.close();
 
-        System.out.println(user);
+        log.info(user.toString());
     }
 
     @Test
     void sessionDeleteTest() {
-        int userId = 42;
+        int userId = 43;
 //        StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
 //        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();
         SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
@@ -125,7 +127,7 @@ class DaoHiberHandlerTest {
         sessionFactory.close();
 
         for(Card card: cardList) {
-            System.out.println(card);
+            log.info(card.toString());
         }
     }
 
@@ -149,8 +151,7 @@ class DaoHiberHandlerTest {
         session.close();
         sessionFactory.close();
 
-        System.out.println(cardList.get(0));
-
+        log.info(cardList.get(0).toString());
     }
 
     @Test
@@ -183,7 +184,6 @@ class DaoHiberHandlerTest {
         card1.setBalance(new BigDecimal(100000));
         card2.setBalance(new BigDecimal(105000));
 
-
         Card beforeUpdatedCard1 = session.get(Card.class, card1.getCardId());
         beforeUpdatedCard1.setBalance(card1.getBalance());
         session.update(beforeUpdatedCard1);
@@ -196,5 +196,31 @@ class DaoHiberHandlerTest {
         session.close();
     }
 
+    @Test
+    public void updateTransactionTest() {
+        SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();  // Тяжеловесный объект, лучше вынести на уровень поля класса и инициализировать в конструкторе???
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+//        List<BankTransaction> transactionList = session.createQuery("FROM BankTransaction").list();
+//        for (BankTransaction b: transactionList)
+//            log.info(b.toString);
+
+        List<Card> cardList1 = session.createQuery("FROM Card c WHERE c.number = '4276600022222222'").list();
+        Card card1 = cardList1.get(0);
+        List<Card> cardList2 = session.createQuery("FROM Card c WHERE c.number = '4276600011111111'").list();
+        Card card2 = cardList2.get(0);
+//        card1.setBalance(new BigDecimal(100000));
+//        card2.setBalance(new BigDecimal(105000));
+
+        BankTransaction bankTransaction1 = new BankTransaction(card1.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(78789.56), "RUR", "Расход");
+        BankTransaction bankTransaction2 = new BankTransaction(bankTransaction1, card2.getNumber(), "Приход");
+
+        session.save(bankTransaction1);
+        session.save(bankTransaction2);
+
+        transaction.commit();
+        session.close();
+    }
 
 }

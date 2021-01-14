@@ -1,10 +1,19 @@
-package domain.entity;
-
-import lombok.extern.slf4j.Slf4j;
-
-@Slf4j
-class UserTest {
-
+//package domain.entity;
+//
+//import lombok.extern.slf4j.Slf4j;
+//import org.junit.jupiter.api.BeforeAll;
+//import org.junit.jupiter.api.Test;
+//import org.mockito.Mock;
+//
+//import javax.validation.ConstraintViolation;
+//import javax.validation.Validation;
+//import javax.validation.Validator;
+//import javax.validation.ValidatorFactory;
+//import java.util.Set;
+//
+//@Slf4j
+//class UserTest {
+//
 //    private static Validator validator;
 //    @Mock
 //    private DataBase dataBase;
@@ -24,7 +33,7 @@ class UserTest {
 //    }
 //
 //    @Test
-//    void getUserName() {
+//    void getUserNameTest() {
 //        dataBase = new DataBase();
 //        User user = dataBase.getUserList().get(0);
 //        log.info(user.getName());
@@ -44,4 +53,4 @@ class UserTest {
 //        MockitoAnnotations.initMocks(this);
 //        List<User> allUsers = dataBase.getUserList();
 //    }
-}
+//}
