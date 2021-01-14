@@ -29,6 +29,7 @@ public class MainClass {
         DaoHiberHandler.closeSessionFactory();
     }
 
+
     //todo: добавить в енум типы транзакций
     //todo: не делать запрос напрямую из UI в DAO (только через Domain, продумать как сделать)
     //todo: продумать, нужно ли объединить ATM и ScriptsController (после создания контроллеров на Spring)

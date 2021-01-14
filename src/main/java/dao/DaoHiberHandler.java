@@ -12,11 +12,9 @@ import java.util.List;
 
 @Slf4j
 public class DaoHiberHandler {
-    private static final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+    //Класс, реализующий CRUD - операции в БД mySQL
 
-    public DaoHiberHandler() {
-        log.info("Соединение создано? - " + String.valueOf(sessionFactory.isOpen()));
-    }
+    private static final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
     public static void closeSessionFactory() {
         sessionFactory.close();
