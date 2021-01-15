@@ -12,6 +12,9 @@
 //
 //@Slf4j
 //public class DaoHandler {
+//      Класс более не используется!!!
+//      Тренировка работы с низкоуровневым jdbc
+//      Позже перейти на Hibernate, а ещё позже на SpringData jdbc
 //
 //    private static final String DBHOST = "localhost";
 //    private static final String DBPORT = "3306";

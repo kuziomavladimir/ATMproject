@@ -33,13 +33,6 @@ public class User {
     @Column(name = "email", unique = true)
     private String eMail;
 
-    public User(String name, String surname, LocalDate birthday, @Email String eMail) {
-        this.name = name;
-        this.surname = surname;
-        this.birthday = birthday;
-        this.eMail = eMail;
-    }
-
     public String geteMail() {
         return eMail;
     }

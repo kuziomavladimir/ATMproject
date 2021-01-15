@@ -7,17 +7,22 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.util.List;
 
 @Slf4j
+@Component
 public class DaoHiberHandler {
     //Класс, реализующий CRUD - операции в БД mySQL
 
-    private static final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
+    private final SessionFactory sessionFactory = new Configuration().configure().buildSessionFactory();
 
-    public static void closeSessionFactory() {
+    @PreDestroy
+    public void closeSessionFactory() {
         sessionFactory.close();
+        log.info("sessionFactory isClosed? - " + sessionFactory.isClosed());
     }
 
     public Card searchCardByNumber(String cardNumber) throws DaoException {
@@ -80,5 +85,4 @@ public class DaoHiberHandler {
         session.close();
         return bankTransactionList;
     }
-
 }

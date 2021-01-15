@@ -32,7 +32,7 @@ class DaoHiberHandlerTest {
 
     @Test
     void sessionInsertTest() {
-        User user = new User("Alala", "Ivanova", LocalDate.now(), "a788lka@yandex.com" );
+        User user = new User(0, "Alala", "Ivanova", LocalDate.now(), "a788lka@yandex.com" );
 
 //        StandardServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
 //        SessionFactory sessionFactory = new MetadataSources(registry).buildMetadata().buildSessionFactory();

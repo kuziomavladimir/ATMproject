@@ -26,10 +26,10 @@ public class MainClass {
                     break;
             }
         } while (!str.equals("q"));
-        DaoHiberHandler.closeSessionFactory();
+        scriptsController.getContext().close();
     }
 
-
+    //todo: продумать, какие ексепшены может выбрасывать DaoHiberHandler и как их обработать
     //todo: добавить в енум типы транзакций
     //todo: не делать запрос напрямую из UI в DAO (только через Domain, продумать как сделать)
     //todo: продумать, нужно ли объединить ATM и ScriptsController (после создания контроллеров на Spring)

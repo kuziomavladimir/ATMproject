@@ -6,19 +6,21 @@ import domain.entity.BankTransaction;
 import domain.entity.Card;
 import domain.customExeptions.IncorrectPinException;
 import domain.customExeptions.NegativeBalanceException;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+//@AllArgsConstructor
+@Component("atmBean")
 public class ATM {
     // Основной класс с бизнесс-методами, моделирует функции банкомата, входит в доменную модель
 
+    @Autowired
     private DaoHiberHandler daoHiberHandler;
-
-    public ATM() {
-        daoHiberHandler = new DaoHiberHandler();
-    }
 
     public Card searchCard(String cardNumber) throws DaoException {
         return daoHiberHandler.searchCardByNumber(cardNumber);
