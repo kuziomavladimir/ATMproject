@@ -1,6 +1,7 @@
 package domain;
 
 import lombok.extern.slf4j.Slf4j;
+import org.example.TransactionType;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -20,5 +21,11 @@ class ATMTest {
         log.info(String.valueOf(bigDecimal2.compareTo(bigDecimal2)));
 
         log.info(String.valueOf(bigDecimal2.subtract(bigDecimal1)));
+    }
+
+    @Test
+    void enumTest() {
+        TransactionType transactionType = TransactionType.CHECKBALANCE;
+        log.info(transactionType.toString());
     }
 }

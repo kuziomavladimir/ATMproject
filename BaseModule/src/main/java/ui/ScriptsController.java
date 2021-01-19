@@ -44,7 +44,7 @@ public class ScriptsController {
             log.warn(e.toString());
             return;
         }
-        log.info("Баланс карты {} равен: {}\t{}", card.getNumber(), card.getBalance(), card.getCurrency());
+        log.info("Баланс карты {} равен: {}\t{}", card.getNumber(), myATM.checkBalance(card), card.getCurrency());
     }
 
     public void doTransfer() {

@@ -4,6 +4,7 @@ import domain.entity.BankTransaction;
 import domain.entity.Card;
 import domain.entity.User;
 import lombok.extern.slf4j.Slf4j;
+import org.example.TransactionType;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -206,8 +207,8 @@ class DaoHiberHandlerTest {
 //        card1.setBalance(new BigDecimal(100000));
 //        card2.setBalance(new BigDecimal(105000));
 
-        BankTransaction bankTransaction1 = new BankTransaction(card1.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(78789.56), "RUR", "Расход");
-        BankTransaction bankTransaction2 = new BankTransaction(bankTransaction1, card2.getNumber(), "Приход");
+        BankTransaction bankTransaction1 = new BankTransaction(card1.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(78789.56), "RUR", TransactionType.OUTTRANSFER);
+        BankTransaction bankTransaction2 = new BankTransaction(bankTransaction1, card2.getNumber(), TransactionType.INTRANSFER);
 
         session.save(bankTransaction1);
         session.save(bankTransaction2);

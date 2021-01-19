@@ -1,6 +1,7 @@
 package domain.entity;
 
 import lombok.*;
+import org.example.TransactionType;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -32,9 +33,10 @@ public class BankTransaction {
     private String currency;
 
     @Column(name = "transaction_type")
-    private String transactionType;  //todo: тип транзакции сделать енум
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 
-    public BankTransaction(String cardNumber, LocalDateTime localDateTime, BigDecimal amount, String currency, String transactionType) {
+    public BankTransaction(String cardNumber, LocalDateTime localDateTime, BigDecimal amount, String currency, TransactionType transactionType) {
         this.cardNumber = cardNumber;
         this.localDateTime = localDateTime;
         this.amount = amount;
@@ -42,7 +44,7 @@ public class BankTransaction {
         this.transactionType = transactionType;
     }
 
-    public BankTransaction(BankTransaction transaction, String cardNumber, String transactionType) {
+    public BankTransaction(BankTransaction transaction, String cardNumber, TransactionType transactionType) {
         this.localDateTime = transaction.getLocalDateTime();
         this.amount = transaction.getAmount();
         this.currency = transaction.getCurrency();

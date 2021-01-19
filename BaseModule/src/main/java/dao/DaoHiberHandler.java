@@ -85,4 +85,15 @@ public class DaoHiberHandler {
         session.close();
         return bankTransactionList;
     }
+
+    public void insertBankTransaction (BankTransaction bankTransaction) {
+        Session session = sessionFactory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        session.save(bankTransaction);
+
+        transaction.commit();
+        log.info("Транзакция добавлена в БД");
+        session.close();
+    }
 }
