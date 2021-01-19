@@ -6,7 +6,6 @@ import domain.entity.BankTransaction;
 import domain.entity.Card;
 import domain.customExeptions.IncorrectPinException;
 import domain.customExeptions.NegativeBalanceException;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

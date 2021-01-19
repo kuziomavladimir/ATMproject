@@ -3,14 +3,12 @@ package ui;
 import dao.DaoException;
 import domain.ATM;
 import domain.entity.BankTransaction;
-import javafx.application.Application;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import domain.entity.Card;
 import domain.customExeptions.IncorrectPinException;
 import domain.customExeptions.NegativeBalanceException;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.math.BigDecimal;
 import java.util.Scanner;
