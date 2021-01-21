@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
 public enum TransactionType {
+
     INTRANSFER("Incoming transfer"), OUTTRANSFER("outgoing transfer"),
     CHECKTRANSACTIONLIST("checking the list of transactions"), CHECKBALANCE("checking balance");
 
