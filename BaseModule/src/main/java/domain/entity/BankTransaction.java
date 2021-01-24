@@ -11,41 +11,42 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-@Entity
-@Table(name = "bank_transactions")
+@AllArgsConstructor
+//@Entity
+//@Table(name = "bank_transactions")
 public class BankTransaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "id")
     private int id;
 
-    @Column(name = "card_number")
+//    @Column(name = "card_number")
     private String cardNumber;
 
-    @Column(name = "date_time")
-    private LocalDateTime localDateTime;
+//    @Column(name = "date_time")
+    private LocalDateTime dateTime;
 
-    @Column(name = "amount")
+//    @Column(name = "amount")
     private BigDecimal amount;
 
-    @Column(name = "currency")
+//    @Column(name = "currency")
     private String currency;
 
-    @Column(name = "transaction_type")
-    @Enumerated(EnumType.STRING)
-    private TransactionType transactionType;
+//    @Column(name = "transaction_type")
+//    @Enumerated(EnumType.STRING)
+    private String transactionType; //todo: позже после перехода на spring JPA поменять на тип перечисления
 
-    public BankTransaction(String cardNumber, LocalDateTime localDateTime, BigDecimal amount, String currency, TransactionType transactionType) {
+    public BankTransaction(String cardNumber, LocalDateTime dateTime, BigDecimal amount, String currency, String transactionType) {
         this.cardNumber = cardNumber;
-        this.localDateTime = localDateTime;
+        this.dateTime = dateTime;
         this.amount = amount;
         this.currency = currency;
         this.transactionType = transactionType;
     }
 
-    public BankTransaction(BankTransaction transaction, String cardNumber, TransactionType transactionType) {
-        this.localDateTime = transaction.getLocalDateTime();
+    public BankTransaction(BankTransaction transaction, String cardNumber, String transactionType) {
+        this.dateTime = transaction.getDateTime();
         this.amount = transaction.getAmount();
         this.currency = transaction.getCurrency();
         this.transactionType = transactionType;

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ATM</title>
+</head>
+<body>
+<p>ATM</p>
+<!--<form method="POST" action="ATM">-->
+<!--    <label>Введите номер карты:</label>-->
+<!--    <input type="text" name="number"/>-->
+<!--    <br/>-->
+<!--    <input type="submit" value="Create!"/>-->
+<!--</form>-->
+
+<form th:method="POST" th:action="@{/ATM}" th:object="${number}">
+
+    <label for="name1">Enter CardNumber:</label>
+    <input type="text" name="number" id="name1"/>
+
+    <label for="name2">Enter Pin:</label>
+    <input type="text" name="pin" id="name2"/>
+
+    <br/>
+    <input type="submit" value="Create!"/>
+</form>
+
+
+</body>
+</html>

@@ -1,38 +1,38 @@
-<?xml version='1.0' encoding='utf-8'?>
-<!--
-  ~ Hibernate, Relational Persistence for Idiomatic Java
-  ~
-  ~ License: GNU Lesser General Public License (LGPL), version 2.1 or later.
-  ~ See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.
-  -->
-<!DOCTYPE hibernate-configuration PUBLIC
-        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
-        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<!--<?xml version='1.0' encoding='utf-8'?>-->
+<!--&lt;!&ndash;-->
+<!--  ~ Hibernate, Relational Persistence for Idiomatic Java-->
+<!--  ~-->
+<!--  ~ License: GNU Lesser General Public License (LGPL), version 2.1 or later.-->
+<!--  ~ See the lgpl.txt file in the root directory or <http://www.gnu.org/licenses/lgpl-2.1.html>.-->
+<!--  &ndash;&gt;-->
+<!--<!DOCTYPE hibernate-configuration PUBLIC-->
+<!--        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"-->
+<!--        "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">-->
 
-<hibernate-configuration>
+<!--<hibernate-configuration>-->
 
-    <session-factory>
+<!--    <session-factory>-->
 
-        <!-- Database connection settings -->
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.url">jdbc:mysql://localhost:3306/atm_schema?useUnicode=true&amp;serverTimezone=UTC</property>
-        <property name="connection.username">root</property>
-        <property name="connection.password">12345</property>
-        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
-        <property name="connection.pool_size">1</property>
-        <property name="show_sql">true</property>
+<!--        &lt;!&ndash; Database connection settings &ndash;&gt;-->
+<!--        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>-->
+<!--        <property name="connection.url">jdbc:mysql://localhost:3306/atm_schema?useUnicode=true&amp;serverTimezone=UTC</property>-->
+<!--        <property name="connection.username">root</property>-->
+<!--        <property name="connection.password">12345</property>-->
+<!--        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>-->
+<!--        <property name="connection.pool_size">1</property>-->
+<!--        <property name="show_sql">true</property>-->
 
-        <!-- Disable the second-level cache  -->
-        <!--        <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>-->
+<!--        &lt;!&ndash; Disable the second-level cache  &ndash;&gt;-->
+<!--        &lt;!&ndash;        <property name="cache.provider_class">org.hibernate.cache.internal.NoCacheProvider</property>&ndash;&gt;-->
 
-        <!-- Drop and re-create the database schema on startup -->
-        <!--        <property name="hbm2ddl.auto">update</property>-->
+<!--        &lt;!&ndash; Drop and re-create the database schema on startup &ndash;&gt;-->
+<!--        &lt;!&ndash;        <property name="hbm2ddl.auto">update</property>&ndash;&gt;-->
 
-<!--        <mapping resource="User.hbm.xml"/>              &lt;!&ndash;для xml маппинга&ndash;&gt;-->
-        <mapping class="domain.entity.User"/>           <!--для anotation маппинга-->
-        <mapping class="domain.entity.Card"/>
-        <mapping class="domain.entity.BankTransaction"/>
+<!--&lt;!&ndash;        <mapping resource="User.hbm.xml"/>              &lt;!&ndash;для xml маппинга&ndash;&gt;&ndash;&gt;-->
+<!--        <mapping class="domain.entity.User"/>           &lt;!&ndash;для anotation маппинга&ndash;&gt;-->
+<!--        <mapping class="domain.entity.Card"/>-->
+<!--        <mapping class="domain.entity.BankTransaction"/>-->
 
-    </session-factory>
+<!--    </session-factory>-->
 
-</hibernate-configuration>
+<!--</hibernate-configuration>-->

@@ -11,33 +11,26 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@Entity
-@Table(name = "users")
+//@Entity
+//@Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private int id;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    @Column(name = "user_id")
+    private int userId;
 
-    @Column(name = "user_name")
-    private String name;
+//    @Column(name = "user_name")
+    private String userName;
 
-    @Column(name = "surname")
+//    @Column(name = "surname")
     private String surname;
 
-    @Column(name = "birthday")
+//    @Column(name = "birthday")
     private LocalDate birthday;
 
-    @Email
-    @Column(name = "email", unique = true)
-    private String eMail;
+//    @Email
+//    @Column(name = "email", unique = true)
+    private String email;
 
-    public String geteMail() {
-        return eMail;
-    }
-
-    public void seteMail(String eMail) {
-        this.eMail = eMail;
-    }
 }
