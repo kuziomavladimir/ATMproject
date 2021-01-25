@@ -1,13 +1,10 @@
-package repository;
+package dao;
 
 import dao.DaoException;
 import domain.entity.BankTransaction;
 import domain.entity.Card;
-import domain.entity.User;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-import org.hibernate.query.Query;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -15,13 +12,12 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.jws.soap.SOAPBinding;
-import java.math.BigDecimal;
 import java.util.List;
 
 @Slf4j
 @Repository
-public class JdbcRepo {
+public class DaoHandler {
+    //Класс, реализующий CRUD - операции в БД mySQL
 
     @Autowired
     public JdbcTemplate jdbcTemplate;
@@ -67,4 +63,5 @@ public class JdbcRepo {
         log.info("Лист транзакций найден");
         return transactionList;
     }
+
 }

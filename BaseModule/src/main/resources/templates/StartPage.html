@@ -12,8 +12,9 @@
 <!--    <br/>-->
 <!--    <input type="submit" value="Create!"/>-->
 <!--</form>-->
+<!--th:object="${number}"-->
 
-<form th:method="POST" th:action="@{/ATM}" th:object="${number}">
+<form th:method="POST" th:action="@{/ATM}">
 
     <label for="name1">Enter CardNumber:</label>
     <input type="text" name="number" id="name1"/>

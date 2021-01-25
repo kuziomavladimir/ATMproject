@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ATM</title>
+</head>
+<body>
+<p>Перевод</p>
+
+
+<form th:method="POST" th:action="@{/ATM/transfer}">
+
+    <label for="name1">Введите номер ВАШЕЙ карты:</label>
+    <input type="text" name="senderNumber" id="name1"/>
+
+    <label for="name2">Введите пин-код:</label>
+    <input type="text" name="pin" id="name2"/>
+
+    <br/>
+    <br/>
+    <label for="name3">Введите номер карты ПОЛУЧАТЕЛЯ:</label>
+    <input type="text" name="resipientNumber" id="name3"/>
+
+    <label for="name4">Введите сумму перевода:</label>
+    <input type="text" name="amount" id="name4"/>
+
+    <br/>
+    <input type="submit" value="Перевести!"/>
+</form>
+
+
+</body>
+</html>

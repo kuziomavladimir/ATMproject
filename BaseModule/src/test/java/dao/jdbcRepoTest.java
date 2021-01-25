@@ -1,7 +1,8 @@
-package repository;
+package dao;
 
 import domain.entity.BankTransaction;
 import domain.entity.Card;
+import lombok.extern.slf4j.Slf4j;
 import org.example.TransactionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,26 +12,26 @@ import ui.Application;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import static org.junit.jupiter.api.Assertions.*;
-
+@Slf4j
 @SpringBootTest(classes = Application.class)
 class jdbcRepoTest {
 
     @Autowired
-    public JdbcRepo jdbcRepo;
+    public DaoHandler daoHandler;
 
     @Test
     void updateCardTest() {
-        jdbcRepo.updateCard(new Card(2, 5, "4276600011111111", "1111", "RUR", BigDecimal.valueOf(105000), 2));
+        daoHandler.updateCard(new Card(2, 5, "4276600011111111", "1111", "RUR", BigDecimal.valueOf(105000), 2));
     }
 
     @Test
     void insertBankTransactionTest() {
-        jdbcRepo.insertBankTransaction(new BankTransaction("4276600011111111", LocalDateTime.now(), BigDecimal.valueOf(0), "RUR", TransactionType.CHECKBALANCE.toString()));
+        daoHandler.insertBankTransaction(new BankTransaction("4276600011111111", LocalDateTime.now(), BigDecimal.valueOf(0), "RUR", TransactionType.CHECKBALANCE.toString()));
     }
 
     @Test
     void searchTransactionsByCardNumberTest() {
-        System.out.println(jdbcRepo.searchTransactionsByCardNumber("4276600077777777"));
+        log.info(daoHandler.searchTransactionsByCardNumber("4276600077777777").toString());
     }
+
 }

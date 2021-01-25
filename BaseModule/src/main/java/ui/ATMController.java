@@ -31,4 +31,26 @@ public class ATMController {
         return "redirect:/ATM";
     }
 
+    @GetMapping("/transfer")
+    public String doTransferGet(@ModelAttribute("senderNumber") String senderNumber,
+                                @ModelAttribute("pin") String pin,
+                                @ModelAttribute("resipientNumber") String resipientNumber,
+                                @ModelAttribute("amount") String amount) {
+        return "TransferPage";
+    }
+
+    @PostMapping("/transfer")
+    public String doTransferPost(@ModelAttribute("senderNumber") String senderNumber,
+                                 @ModelAttribute("pin") String pin,
+                                 @ModelAttribute("resipientNumber") String resipientNumber,
+                                 @ModelAttribute("amount") String amount) {
+
+        log.info("Введённый номер карты и пин:" + senderNumber + "\t" + pin + "\tполучатель: \t" + resipientNumber);
+
+        scriptsController.doTransfer(senderNumber, pin, resipientNumber, amount);
+
+        log.info("Пост запрос проведен");
+        return "redirect:/ATM";
+    }
+
 }

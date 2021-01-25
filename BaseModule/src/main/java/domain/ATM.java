@@ -8,31 +8,29 @@ import domain.customExeptions.NegativeBalanceException;
 import org.example.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import repository.JdbcRepo;
+import org.springframework.transaction.annotation.Transactional;
+import dao.DaoHandler;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-//@AllArgsConstructor
 @Component("atmBean")
 public class ATM {
     // Основной класс с бизнесс-методами, моделирует функции банкомата, входит в доменную модель
 
-//    @Autowired
-//    private DaoHiberHandler daoHiberHandler;
     @Autowired
-    private JdbcRepo daoHiberHandler;
+    private DaoHandler daoHandler;
 
 
     public Card searchCard(String cardNumber) throws DaoException {
-        return daoHiberHandler.searchCardByNumber(cardNumber);
+        return daoHandler.searchCardByNumber(cardNumber);
     }
 
     public BigDecimal checkBalance(Card card) {
         BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
                 card.getCurrency(), TransactionType.CHECKBALANCE.toString());
-        daoHiberHandler.insertBankTransaction(bankTransaction);
+        daoHandler.insertBankTransaction(bankTransaction);
         return card.getBalance();
     }
 
@@ -44,34 +42,41 @@ public class ATM {
         }
         if (!card.getPinCode().equals(pinCode)) {
             card.setTryesEnterPin(card.getTryesEnterPin() - 1);
-            daoHiberHandler.updateCard(card);
+            daoHandler.updateCard(card);
             throw new IncorrectPinException("Неверный Пин!");
         }
         card.setTryesEnterPin(3);
-        daoHiberHandler.updateCard(card);
+        daoHandler.updateCard(card);
     }
 
-//    public void transferPToP(Card senderCard, Card recipientCard, BigDecimal amount)
-//            throws NegativeBalanceException, DaoException {
-//        // Перевод с карты на карту
-//
-//        if(senderCard.getBalance().compareTo(amount) >= 0) {
-//            BankTransaction senderTransaction = new BankTransaction(senderCard.getNumber(), LocalDateTime.now(), amount, senderCard.getCurrency(), TransactionType.OUTTRANSFER);
-//            BankTransaction recipientTransaction = new BankTransaction(senderTransaction, recipientCard.getNumber(), TransactionType.INTRANSFER);
-//
-//            senderCard.setBalance(senderCard.getBalance().subtract(amount));
-//            recipientCard.setBalance(recipientCard.getBalance().add(amount));
-//            daoHiberHandler.updateTwoCardsWithTransfer(senderCard, recipientCard, senderTransaction, recipientTransaction);
-//        }
-//        else {
-//            throw new NegativeBalanceException("Введенная сумма превышает остаток на вашем счете!");
-//        }
-//    }
+    @Transactional
+    public void transferPToP(Card senderCard, Card recipientCard, BigDecimal amount)
+            throws NegativeBalanceException {
+        // Перевод с карты на карту
+
+        if(senderCard.getBalance().compareTo(amount) >= 0) {
+            BankTransaction senderTransaction = new BankTransaction(senderCard.getNumber(), LocalDateTime.now(), amount,
+                    senderCard.getCurrency(), TransactionType.OUTTRANSFER.toString());
+            BankTransaction recipientTransaction = new BankTransaction(senderTransaction, recipientCard.getNumber(),
+                    TransactionType.INTRANSFER.toString());
+
+            senderCard.setBalance(senderCard.getBalance().subtract(amount));
+            recipientCard.setBalance(recipientCard.getBalance().add(amount));
+
+            daoHandler.updateCard(senderCard);
+            daoHandler.updateCard(recipientCard);
+            daoHandler.insertBankTransaction(senderTransaction);
+            daoHandler.insertBankTransaction(recipientTransaction);
+        }
+        else {
+            throw new NegativeBalanceException("Введенная сумма превышает остаток на вашем счете!");
+        }
+    }
 
     public List<BankTransaction> searchTransactions(Card card) {
         BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
                 card.getCurrency(), TransactionType.CHECKTRANSACTIONLIST.toString());
-        daoHiberHandler.insertBankTransaction(bankTransaction);
-        return daoHiberHandler.searchTransactionsByCardNumber(card.getNumber());
+        daoHandler.insertBankTransaction(bankTransaction);
+        return daoHandler.searchTransactionsByCardNumber(card.getNumber());
     }
 }
