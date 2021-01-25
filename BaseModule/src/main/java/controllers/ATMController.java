@@ -1,10 +1,10 @@
-package ui;
+package controllers;
 
 import dao.DaoException;
-import domain.ATM;
-import domain.customExeptions.IncorrectPinException;
-import domain.customExeptions.NegativeBalanceException;
-import domain.entity.Card;
+import services.ATM;
+import services.customExeptions.IncorrectPinException;
+import services.customExeptions.NegativeBalanceException;
+import services.entity.Card;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

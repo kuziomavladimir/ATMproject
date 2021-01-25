@@ -1,14 +1,14 @@
-package domain;
+package services;
 
 import dao.DaoException;
-import domain.customExeptions.NegativeBalanceException;
-import domain.entity.Card;
+import services.customExeptions.NegativeBalanceException;
+import services.entity.Card;
 import lombok.extern.slf4j.Slf4j;
 import org.example.TransactionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ui.Application;
+import controllers.Application;
 
 import java.math.BigDecimal;
 

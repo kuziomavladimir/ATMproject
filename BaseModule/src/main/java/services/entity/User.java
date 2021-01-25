@@ -1,4 +1,4 @@
-package domain.entity;
+package services.entity;
 
 import lombok.*;
 

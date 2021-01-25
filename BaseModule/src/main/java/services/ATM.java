@@ -1,13 +1,13 @@
-package domain;
+package services;
 
 import dao.DaoException;
-import domain.entity.BankTransaction;
-import domain.entity.Card;
-import domain.customExeptions.IncorrectPinException;
-import domain.customExeptions.NegativeBalanceException;
+import org.springframework.stereotype.Service;
+import services.entity.BankTransaction;
+import services.entity.Card;
+import services.customExeptions.IncorrectPinException;
+import services.customExeptions.NegativeBalanceException;
 import org.example.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import dao.DaoHandler;
 
@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Component("atmBean")
+@Service
 public class ATM {
     // Основной класс с бизнесс-методами, моделирует функции банкомата, входит в доменную модель
 
@@ -24,13 +24,11 @@ public class ATM {
 
     public Card searchCard(String cardNumber) throws DaoException {
         // Поиск карты по номеру
-
         return daoHandler.searchCardByNumber(cardNumber);
     }
 
     public BigDecimal checkBalance(Card card) {
         // Проверка баланса
-
         BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
                 card.getCurrency(), TransactionType.CHECKBALANCE.toString());
         daoHandler.insertBankTransaction(bankTransaction);
@@ -39,7 +37,6 @@ public class ATM {
 
     public void authentication(Card card, String pinCode) throws IncorrectPinException {
         // Аутентификация
-
         if (card.getTryesEnterPin() <= 0) {
             throw new IncorrectPinException("The PIN code was previously entered incorrectly 3 times, the operation is not available");
         }
@@ -87,7 +84,6 @@ public class ATM {
 
     public List<BankTransaction> searchTransactionsStory(Card card) {
         // Проверка истории операций
-
         BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
                 card.getCurrency(), TransactionType.CHECKTRANSACTIONLIST.toString());
         daoHandler.insertBankTransaction(bankTransaction);

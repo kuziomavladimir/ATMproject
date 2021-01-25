@@ -1,13 +1,13 @@
 package dao;
 
-import domain.entity.BankTransaction;
-import domain.entity.Card;
+import services.entity.BankTransaction;
+import services.entity.Card;
 import lombok.extern.slf4j.Slf4j;
 import org.example.TransactionType;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ui.Application;
+import controllers.Application;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

@@ -1,7 +1,7 @@
 package dao;
 
-import domain.entity.BankTransaction;
-import domain.entity.Card;
+import services.entity.BankTransaction;
+import services.entity.Card;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.beans.factory.annotation.Autowired;
