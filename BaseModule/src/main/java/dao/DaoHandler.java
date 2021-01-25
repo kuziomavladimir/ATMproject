@@ -1,6 +1,5 @@
 package dao;
 
-import dao.DaoException;
 import domain.entity.BankTransaction;
 import domain.entity.Card;
 import lombok.extern.slf4j.Slf4j;
@@ -20,7 +19,7 @@ public class DaoHandler {
     //Класс, реализующий CRUD - операции в БД mySQL
 
     @Autowired
-    public JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
     @Transactional
     public Card searchCardByNumber(String cardNumber) throws DaoException {
@@ -29,7 +28,7 @@ public class DaoHandler {
             card = jdbcTemplate.queryForObject("select * from atm_schema.cards where number = '" + cardNumber + "'",
                     new BeanPropertyRowMapper<>(Card.class));
         } catch (EmptyResultDataAccessException e) {
-            throw new DaoException("Карта не найдена в БД");
+            throw new DaoException("Card not found in Data base");
         }
         log.info("Карта найдена");
         return card;

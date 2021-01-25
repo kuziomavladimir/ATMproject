@@ -1,5 +1,6 @@
 package domain;
 
+import dao.DaoException;
 import domain.customExeptions.NegativeBalanceException;
 import domain.entity.Card;
 import lombok.extern.slf4j.Slf4j;
@@ -43,8 +44,8 @@ class ATMTest {
     void transferPToPTest() {
         try {
             atm.transferPToP(new Card(2, 5, "4276600011111111", "1111", "RUR", BigDecimal.valueOf(105000), 3),
-                    new Card(1, 9, "4274600000000000", "9999", "RUR", BigDecimal.valueOf(350), 3), BigDecimal.valueOf(100));
-        } catch (NegativeBalanceException e) {
+                    "4274600000000000", "100");
+        } catch (NegativeBalanceException| DaoException e) {
             e.printStackTrace();
         }
     }

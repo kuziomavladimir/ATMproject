@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @Slf4j
 @SpringBootTest(classes = Application.class)
-class jdbcRepoTest {
+class DaoHandlerTest {
 
     @Autowired
     public DaoHandler daoHandler;

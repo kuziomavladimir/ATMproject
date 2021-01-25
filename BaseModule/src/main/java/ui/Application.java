@@ -7,7 +7,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 
-@SpringBootApplication(scanBasePackages = {"dao", "domain", "ui", "repository"})
+@SpringBootApplication(scanBasePackages = {"dao", "domain", "ui"})
 public class Application {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);

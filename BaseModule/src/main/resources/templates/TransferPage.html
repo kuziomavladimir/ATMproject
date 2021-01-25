@@ -5,27 +5,19 @@
     <title>ATM</title>
 </head>
 <body>
-<p>Перевод</p>
+<p>Money Transfer</p>
 
 
 <form th:method="POST" th:action="@{/ATM/transfer}">
 
-    <label for="name1">Введите номер ВАШЕЙ карты:</label>
-    <input type="text" name="senderNumber" id="name1"/>
-
-    <label for="name2">Введите пин-код:</label>
-    <input type="text" name="pin" id="name2"/>
-
-    <br/>
-    <br/>
-    <label for="name3">Введите номер карты ПОЛУЧАТЕЛЯ:</label>
+    <label for="name3">Enter recipient's card number:</label>
     <input type="text" name="resipientNumber" id="name3"/>
 
-    <label for="name4">Введите сумму перевода:</label>
+    <label for="name4">Enter amount:</label>
     <input type="text" name="amount" id="name4"/>
 
     <br/>
-    <input type="submit" value="Перевести!"/>
+    <input type="submit" value="Transfer!"/>
 </form>
 
 
