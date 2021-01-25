@@ -1,4 +1,4 @@
-package customExeptions;
+package domain.customExeptions;
 
 public class NegativeBalanceException extends Exception{
     public NegativeBalanceException() {
