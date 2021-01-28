@@ -7,13 +7,13 @@
 <body>
 
 <br/>
-<a href="/ATM/balance">Check Balance</a>
+<a th:href="@{/ATM/balance(num=${num},pin=${pin})}">Check Balance</a>
 <br/>
 <br/>
-<a href="/ATM/transactions">Check Transactions</a>
+<a th:href="@{/ATM/transactions(num=${num},pin=${pin})}">Check Transactions</a>
 <br/>
 <br/>
-<a href="/ATM/transfer">Do Transfer</a>
+<a th:href="@{/ATM/transfer(num=${num},pin=${pin})}">Do Transfer</a>
 <br/>
 <br/>
 <br/>

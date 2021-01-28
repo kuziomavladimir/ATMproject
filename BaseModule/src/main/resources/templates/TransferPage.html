@@ -10,6 +10,9 @@
 
 <form th:method="POST" th:action="@{/ATM/transfer}">
 
+    <input type="hidden" name="num" th:value="${num}"/>
+    <input type="hidden" name="pin" th:value="${pin}" />
+
     <label for="name3">Enter recipient's card number:</label>
     <input type="text" name="resipientNumber" id="name3"/>
 

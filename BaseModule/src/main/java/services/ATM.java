@@ -27,16 +27,9 @@ public class ATM {
         return daoHandler.searchCardByNumber(cardNumber);
     }
 
-    public BigDecimal checkBalance(Card card) {
-        // Проверка баланса
-        BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
-                card.getCurrency(), TransactionType.CHECKBALANCE.toString());
-        daoHandler.insertBankTransaction(bankTransaction);
-        return card.getBalance();
-    }
-
-    public void authentication(Card card, String pinCode) throws IncorrectPinException {
+    public void authentication(String cardNumber, String pinCode) throws DaoException, IncorrectPinException {
         // Аутентификация
+        Card card = searchCard(cardNumber);
         if (card.getTryesEnterPin() <= 0) {
             throw new IncorrectPinException("The PIN code was previously entered incorrectly 3 times, the operation is not available");
         }
@@ -49,16 +42,39 @@ public class ATM {
         daoHandler.updateCard(card);
     }
 
+    public BigDecimal checkBalance(String cardNumber, String pinCode) throws DaoException, IncorrectPinException{
+        // Проверка баланса
+        Card card = searchCard(cardNumber);
+        authentication(cardNumber, pinCode);
+        BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
+                card.getCurrency(), TransactionType.CHECKBALANCE.toString());
+        daoHandler.insertBankTransaction(bankTransaction);
+        return card.getBalance();
+    }
+
+    public List<BankTransaction> searchTransactionsStory(String cardNumber, String pinCode) throws DaoException, IncorrectPinException{
+        // Проверка истории операций
+        Card card = searchCard(cardNumber);
+        authentication(cardNumber, pinCode);
+        BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
+                card.getCurrency(), TransactionType.CHECKTRANSACTIONLIST.toString());
+        daoHandler.insertBankTransaction(bankTransaction);
+        return daoHandler.searchTransactionsByCardNumber(card.getNumber());
+    }
+
     @Transactional
-    public void transferPToP(Card senderCard, String recipientCardNumber, String amount)
-            throws DaoException, NegativeBalanceException {
+    public void transferPToP(String senderCardNumber, String pinCode, String recipientCardNumber, String amount)
+            throws DaoException, IncorrectPinException, NegativeBalanceException {
         // Перевод с карты на карту
+
+        Card senderCard = searchCard(senderCardNumber);
+        authentication(senderCardNumber, pinCode);
 
         BigDecimal bigDecimal;
         try {
             bigDecimal = new BigDecimal(amount);
         } catch (NumberFormatException e) {
-            throw new NegativeBalanceException("Incorrect amount - format");
+            throw new NegativeBalanceException("Incorrect amount format");
         }
 
         Card recipientCard = searchCard(recipientCardNumber);
@@ -73,20 +89,12 @@ public class ATM {
             recipientCard.setBalance(recipientCard.getBalance().add(bigDecimal));
 
             daoHandler.updateCard(senderCard);
-            daoHandler.updateCard(recipientCard);
+            daoHandler.updateCard(recipientCard);   //todo: Исправить! Пин-код карты получателя так же апдейтится!!!
             daoHandler.insertBankTransaction(senderTransaction);
             daoHandler.insertBankTransaction(recipientTransaction);
         }
         else {
             throw new NegativeBalanceException("The amount entered exceeds your account balance!");
         }
-    }
-
-    public List<BankTransaction> searchTransactionsStory(Card card) {
-        // Проверка истории операций
-        BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
-                card.getCurrency(), TransactionType.CHECKTRANSACTIONLIST.toString());
-        daoHandler.insertBankTransaction(bankTransaction);
-        return daoHandler.searchTransactionsByCardNumber(card.getNumber());
     }
 }

@@ -19,95 +19,89 @@ public class ATMController {
 
     @Autowired
     private ATM atm;
-    private Card card;      //todo: Стоит ли тут вообще работать с бизнес-сущностью, или лучше передать строку для поиска в бизнес-класс ATM
-    private String answerMessage;
 
     @GetMapping()
-    public String startPage(@ModelAttribute("number") String number, @ModelAttribute("pin") String pin) {
-        card = null;        //todo: Уничтожить карту для безопасности (продумать как повысить безопасность)
+    public String makeStartPageGet() {
         return "StartPage";
     }
 
     @PostMapping()
     @Transactional
-    public String startPagePost(@ModelAttribute("number") String number, @ModelAttribute("pin") String pin) {
-
-        log.info("Введённый номер карты и пин:" + number + "\t" + pin);
-
-        try {
-            card = atm.searchCard(number);
-        } catch (DaoException e) {
-            card = null;    //todo: Уничтожить карту для безопасности (продумать как повысить безопасность)
-            log.info(e.toString());
-            answerMessage = e.getMessage();
-            return "redirect:/ATM/answer?answertext=" + answerMessage;
-        }
+    public String makeStartPagePost(@ModelAttribute("num") String cardNumber,
+                                    @ModelAttribute("pin") String pinCode) {
+        log.info("Введённый номер карты и пин:" + cardNumber + "\t" + pinCode);
 
         try {
-            atm.authentication(card, pin);
-        } catch (IncorrectPinException e) {
-            card = null;    //todo: Уничтожить карту для безопасности (продумать как повысить безопасность)
+            atm.authentication(cardNumber, pinCode);
+        } catch (DaoException | IncorrectPinException e) {
             log.info(e.toString());
-            answerMessage = e.getMessage();
-            return "redirect:/ATM/answer?answertext=" + answerMessage;
+            return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
-
         log.info("Пост запрос на аутентификацию проведен");
-        return "redirect:/ATM/mainmenu";
+        return "redirect:/ATM/mainmenu?num=" + cardNumber + "&pin=" + pinCode;
     }
 
     @GetMapping("/answer")
-    public String errorPage(@RequestParam(value = "answertext", required = false) String answertext, Model model) {
-
-        model.addAttribute("message", answertext);
-        card = null;    //todo: Уничтожить карту для безопасности (продумать как повысить безопасность)
+    public String makeErrorPage(@ModelAttribute("answertext") String answerMessage) {
         return "AnswerPage";
     }
 
     @GetMapping("/mainmenu")
-    public String mainMenuPage() {
+    public String makeMainMenuPage(@ModelAttribute("num") String cardNumber,
+                                   @ModelAttribute("pin") String pinCode) {
         return "MainMenu";
     }
 
     @GetMapping("/balance")
-    public String balancePage(Model model) {
-        model.addAttribute("message", atm.checkBalance(card));
-        card = null;    //todo: Уничтожить карту для безопасности (продумать как повысить безопасность)
+    public String makeBalancePage(@RequestParam("num") String cardNumber,
+                                  @RequestParam("pin") String pinCode,
+                                  Model model) {
+        try {
+            model.addAttribute("message", atm.checkBalance(cardNumber, pinCode));
+        } catch (DaoException | IncorrectPinException e) {
+            log.info(e.toString());
+            return "redirect:/ATM/answer?answertext=" + e.getMessage();
+        }
+
         return "BalancePage";
     }
 
     @GetMapping("/transactions")
-    public String transactionsPage(Model model) {
-        model.addAttribute("transactions", atm.searchTransactionsStory(card));
-        card = null;    //todo: Уничтожить карту для безопасности (продумать как повысить безопасность)
+    public String makeTransactionsPage(@RequestParam("num") String cardNumber,
+                                       @RequestParam("pin") String pinCode,
+                                       Model model) {
+        try {
+            model.addAttribute("transactions", atm.searchTransactionsStory(cardNumber, pinCode));
+        } catch (DaoException | IncorrectPinException e) {
+            log.info(e.toString());
+            return "redirect:/ATM/answer?answertext=" + e.getMessage();
+        }
+
         return "TransactionsPage";
     }
 
     @GetMapping("/transfer")
-    public String doTransferGet(@ModelAttribute("resipientNumber") String resipientNumber,
-                                @ModelAttribute("amount") String amount) {
+    public String makeTransferPageGet(@ModelAttribute("num") String cardNumber,
+                                      @ModelAttribute("pin") String pinCode) {
         return "TransferPage";
     }
 
     @Transactional
     @PostMapping("/transfer")
-    public String doTransferPost(@ModelAttribute("resipientNumber") String resipientNumber,
-                                 @ModelAttribute("amount") String amount) {
+    public String makeTransferPagePost(@ModelAttribute("num") String cardNumber,
+                                       @ModelAttribute("pin") String pinCode,
+                                       @ModelAttribute("resipientNumber") String resipientCardNumber,
+                                       @ModelAttribute("amount") String amount) {
 
-        log.info("Введённый номер карты получателя: \t" + resipientNumber + ",\tСумма: " + amount);
+        log.info("Введённый номер карты получателя: \t" + resipientCardNumber + ",\tСумма: " + amount);
 
         try {
-            atm.transferPToP(card, resipientNumber, amount);
-        } catch (DaoException|NegativeBalanceException e) {
-            card = null;    //todo: Уничтожить карту для безопасности (продумать как повысить безопасность)
+            atm.transferPToP(cardNumber, pinCode, resipientCardNumber, amount);
+        } catch (DaoException|IncorrectPinException|NegativeBalanceException e) {
             log.info(e.toString());
-            answerMessage = e.getMessage();
-            return "redirect:/ATM/answer?answertext=" + answerMessage;
+            return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
-
-        card = null;    //todo: Уничтожить карту для безопасности (продумать как повысить безопасность)
         log.info("Пост запрос на перевод проведен");
-        answerMessage = "Successfully!!!";
-        return "redirect:/ATM/answer?answertext=" + answerMessage;
+        return "redirect:/ATM/answer?answertext=Successfully!!!";
     }
 }
