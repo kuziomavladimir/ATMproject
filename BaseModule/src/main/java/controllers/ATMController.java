@@ -1,16 +1,19 @@
 package controllers;
 
 import dao.DaoException;
+import org.springframework.validation.BindingResult;
 import services.ATM;
 import services.customExeptions.IncorrectPinException;
 import services.customExeptions.NegativeBalanceException;
-import services.entity.Card;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
 
 @Slf4j
 @Controller

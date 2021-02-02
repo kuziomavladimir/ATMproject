@@ -9,8 +9,8 @@ public class Application {
         SpringApplication.run(Application.class, args);
     }
 
-    //todo: изменить jdbcTemplate на namedParameterJdbcTemplate
     //todo: настроить запись логирования в файл
     //todo: привести в порядок тесты (сделать ассерты)
     //todo: заменить циклы на стримы!!!
+    //todo: добавить валидацию форм в thymleaf
 }
