@@ -24,6 +24,7 @@ public class DaoHandler {
 
     @Transactional
     public Card searchCardByNumber(String cardNumber) throws DaoException {
+
         Card card;
         try {
             card = jdbcTemplate.queryForObject("select * from atm_schema.cards where number = ?", new Object[]{cardNumber},

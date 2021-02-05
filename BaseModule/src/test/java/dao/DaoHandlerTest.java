@@ -34,4 +34,18 @@ class DaoHandlerTest {
         log.info(daoHandler.searchTransactionsByCardNumber("4276600077777777").toString());
     }
 
+    @Test
+    void searchCardByNumberTest() {
+        Card card = null;
+        try {
+            card = daoHandler.searchCardByNumber("4276600011111111");
+        } catch (DaoException e) {
+            e.printStackTrace();
+        }
+
+        card.setTryesEnterPin(3);
+
+        daoHandler.updateCard(card);
+    }
+
 }
