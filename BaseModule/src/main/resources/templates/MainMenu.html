@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Main Menu</title>
+</head>
+<body>
+
+<br/>
+<a th:href="@{/ATM/balance(num=${num},pin=${pin})}">Check Balance</a>
+<br/>
+<br/>
+<a th:href="@{/ATM/transactions(num=${num},pin=${pin})}">Check Transactions</a>
+<br/>
+<br/>
+<a th:href="@{/ATM/transfer(num=${num},pin=${pin})}">Do Transfer</a>
+<br/>
+<br/>
+<br/>
+<br/>
+<a href="/ATM">Exit</a>
+
+</body>
+</html>

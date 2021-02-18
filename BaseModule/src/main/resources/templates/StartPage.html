@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ATM</title>
+</head>
+<body>
+<p>ATM</p>
+
+<form th:method="POST" th:action="@{/ATM}">
+
+    <label for="name1">Enter CardNumber:</label>
+    <input type="text" name="num" id="name1"/>
+    <br/>
+
+    <label for="name2">Enter Pin:</label>
+    <input type="text" name="pin" id="name2"/>
+
+    <br/>
+    <input type="submit" value="Enter!"/>
+</form>
+
+
+</body>
+</html>

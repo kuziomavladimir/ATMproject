@@ -1,13 +1,24 @@
-package domain;
+package services;
 
+import dao.DaoException;
+import services.customExeptions.IncorrectPinException;
+import services.customExeptions.NegativeBalanceException;
+import services.entity.Card;
 import lombok.extern.slf4j.Slf4j;
 import org.example.TransactionType;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import controllers.Application;
 
 import java.math.BigDecimal;
 
 @Slf4j
+@SpringBootTest(classes = Application.class)
 class ATMTest {
+
+    @Autowired
+    private ATM atm;
 
     @Test
     void bigDecimalTest() {
@@ -27,5 +38,15 @@ class ATMTest {
     void enumTest() {
         TransactionType transactionType = TransactionType.CHECKBALANCE;
         log.info(transactionType.toString());
+    }
+
+
+    @Test
+    void transferPToPTest() {
+        try {
+            atm.transferPToP("4276600011111111", "1111","4274600000000000", "100");
+        } catch (DaoException| IncorrectPinException |NegativeBalanceException e) {
+            e.printStackTrace();
+        }
     }
 }

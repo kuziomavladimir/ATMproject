@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ATM</title>
+</head>
+<body>
+<p>Money Transfer</p>
+
+
+<form th:method="POST" th:action="@{/ATM/transfer}">
+
+    <input type="hidden" name="num" th:value="${num}"/>
+    <input type="hidden" name="pin" th:value="${pin}" />
+
+    <label for="name3">Enter recipient's card number:</label>
+    <input type="text" name="resipientNumber" id="name3"/>
+
+    <label for="name4">Enter amount:</label>
+    <input type="text" name="amount" id="name4"/>
+
+    <br/>
+    <input type="submit" value="Transfer!"/>
+</form>
+
+
+</body>
+</html>
