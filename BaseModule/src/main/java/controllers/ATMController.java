@@ -1,7 +1,6 @@
 package controllers;
 
-import dao.DaoException;
-import org.springframework.validation.BindingResult;
+import services.customExeptions.CardNotFoundException;
 import services.ATM;
 import services.customExeptions.IncorrectPinException;
 import services.customExeptions.NegativeBalanceException;
@@ -11,9 +10,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import javax.validation.constraints.Size;
 
 @Slf4j
 @Controller
@@ -36,7 +32,7 @@ public class ATMController {
 
         try {
             atm.authentication(cardNumber, pinCode);
-        } catch (DaoException | IncorrectPinException e) {
+        } catch (CardNotFoundException | IncorrectPinException e) {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
@@ -61,7 +57,7 @@ public class ATMController {
                                   Model model) {
         try {
             model.addAttribute("message", atm.checkBalance(cardNumber, pinCode));
-        } catch (DaoException | IncorrectPinException e) {
+        } catch (CardNotFoundException | IncorrectPinException e) {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
@@ -75,7 +71,7 @@ public class ATMController {
                                        Model model) {
         try {
             model.addAttribute("transactions", atm.searchTransactionsStory(cardNumber, pinCode));
-        } catch (DaoException | IncorrectPinException e) {
+        } catch (CardNotFoundException | IncorrectPinException e) {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
@@ -100,7 +96,7 @@ public class ATMController {
 
         try {
             atm.transferPToP(cardNumber, pinCode, resipientCardNumber, amount);
-        } catch (DaoException|IncorrectPinException|NegativeBalanceException e) {
+        } catch (CardNotFoundException |IncorrectPinException|NegativeBalanceException e) {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }

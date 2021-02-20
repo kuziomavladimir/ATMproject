@@ -1,7 +1,9 @@
 package services.entity;
 
 import lombok.*;
+import org.example.TransactionType;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -9,18 +11,20 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
+@Entity(name = "bank_transactions")
 public class BankTransaction {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String cardNumber;
     private LocalDateTime dateTime;
     private BigDecimal amount;
     private String currency;
-//    @Enumerated(EnumType.STRING)
-    private String transactionType; //todo: позже после перехода на spring JPA поменять на тип енум
+    @Enumerated(EnumType.STRING)
+    private TransactionType transactionType;
 
-    public BankTransaction(String cardNumber, LocalDateTime dateTime, BigDecimal amount, String currency, String transactionType) {
+    public BankTransaction(String cardNumber, LocalDateTime dateTime, BigDecimal amount, String currency, TransactionType transactionType) {
         this.cardNumber = cardNumber;
         this.dateTime = dateTime;
         this.amount = amount;
@@ -28,7 +32,7 @@ public class BankTransaction {
         this.transactionType = transactionType;
     }
 
-    public BankTransaction(BankTransaction transaction, String cardNumber, String transactionType) {
+    public BankTransaction(BankTransaction transaction, String cardNumber, TransactionType transactionType) {
         this.dateTime = transaction.getDateTime();
         this.amount = transaction.getAmount();
         this.currency = transaction.getCurrency();

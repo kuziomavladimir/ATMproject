@@ -1,7 +1,9 @@
 package services;
 
-import dao.DaoException;
+import services.customExeptions.CardNotFoundException;
 import org.springframework.stereotype.Service;
+import repository.BankTransactionsRepository;
+import repository.CardsRepository;
 import services.entity.BankTransaction;
 import services.entity.Card;
 import services.customExeptions.IncorrectPinException;
@@ -9,7 +11,6 @@ import services.customExeptions.NegativeBalanceException;
 import org.example.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-import dao.DaoHandler;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -20,14 +21,17 @@ public class ATM {
     // Основной класс с бизнесс-методами, моделирует функции банкомата, входит в доменную модель
 
     @Autowired
-    private DaoHandler daoHandler;
+    private CardsRepository cardsRepository;
+    @Autowired
+    private BankTransactionsRepository bankTransactionsRepository;
 
-    public Card searchCard(String cardNumber) throws DaoException {
+
+    public Card searchCard(String cardNumber) throws CardNotFoundException {
         // Поиск карты по номеру
-        return daoHandler.searchCardByNumber(cardNumber);
+        return cardsRepository.findByNumber(cardNumber).orElseThrow(() -> new CardNotFoundException("Card not found in Data base"));
     }
 
-    public void authentication(String cardNumber, String pinCode) throws DaoException, IncorrectPinException {
+    public void authentication(String cardNumber, String pinCode) throws CardNotFoundException, IncorrectPinException {
         // Аутентификация
         Card card = searchCard(cardNumber);
         if (card.getTryesEnterPin() <= 0) {
@@ -35,36 +39,36 @@ public class ATM {
         }
         if (!card.getPinCode().equals(pinCode)) {
             card.setTryesEnterPin(card.getTryesEnterPin() - 1);
-            daoHandler.updateCard(card);
+            cardsRepository.save(card);
             throw new IncorrectPinException("Incorrect Pin-code");
         }
         card.setTryesEnterPin(3);
-        daoHandler.updateCard(card);
+        cardsRepository.save(card);
     }
 
-    public BigDecimal checkBalance(String cardNumber, String pinCode) throws DaoException, IncorrectPinException{
+    public BigDecimal checkBalance(String cardNumber, String pinCode) throws CardNotFoundException, IncorrectPinException{
         // Проверка баланса
         Card card = searchCard(cardNumber);
         authentication(cardNumber, pinCode);
         BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
-                card.getCurrency(), TransactionType.CHECKBALANCE.toString());
-        daoHandler.insertBankTransaction(bankTransaction);
+                card.getCurrency(), TransactionType.CHECKBALANCE);
+        bankTransactionsRepository.save(bankTransaction);
         return card.getBalance();
     }
 
-    public List<BankTransaction> searchTransactionsStory(String cardNumber, String pinCode) throws DaoException, IncorrectPinException{
+    public List<BankTransaction> searchTransactionsStory(String cardNumber, String pinCode) throws CardNotFoundException, IncorrectPinException{
         // Проверка истории операций
         Card card = searchCard(cardNumber);
         authentication(cardNumber, pinCode);
         BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
-                card.getCurrency(), TransactionType.CHECKTRANSACTIONLIST.toString());
-        daoHandler.insertBankTransaction(bankTransaction);
-        return daoHandler.searchTransactionsByCardNumber(card.getNumber());
+                card.getCurrency(), TransactionType.CHECKTRANSACTIONLIST);
+        bankTransactionsRepository.save(bankTransaction);
+        return bankTransactionsRepository.findAllByCardNumberOrderByDateTime(card.getNumber());
     }
 
     @Transactional
     public void transferPToP(String senderCardNumber, String pinCode, String recipientCardNumber, String amount)
-            throws DaoException, IncorrectPinException, NegativeBalanceException {
+            throws CardNotFoundException, IncorrectPinException, NegativeBalanceException {
         // Перевод с карты на карту
 
         Card senderCard = searchCard(senderCardNumber);
@@ -81,17 +85,17 @@ public class ATM {
 
         if(senderCard.getBalance().compareTo(bigDecimal) >= 0) {
             BankTransaction senderTransaction = new BankTransaction(senderCard.getNumber(), LocalDateTime.now(), bigDecimal,
-                    senderCard.getCurrency(), TransactionType.OUTTRANSFER.toString());
+                    senderCard.getCurrency(), TransactionType.OUTTRANSFER);
             BankTransaction recipientTransaction = new BankTransaction(senderTransaction, recipientCard.getNumber(),
-                    TransactionType.INTRANSFER.toString());
+                    TransactionType.INTRANSFER);
 
             senderCard.setBalance(senderCard.getBalance().subtract(bigDecimal));
             recipientCard.setBalance(recipientCard.getBalance().add(bigDecimal));
 
-            daoHandler.updateCard(senderCard);
-            daoHandler.updateCard(recipientCard);   //todo: Исправить! Пин-код карты получателя так же апдейтится!!!
-            daoHandler.insertBankTransaction(senderTransaction);
-            daoHandler.insertBankTransaction(recipientTransaction);
+            cardsRepository.save(senderCard);
+            cardsRepository.save(recipientCard);
+            bankTransactionsRepository.save(senderTransaction);
+            bankTransactionsRepository.save(recipientTransaction);
         }
         else {
             throw new NegativeBalanceException("The amount entered exceeds your account balance!");

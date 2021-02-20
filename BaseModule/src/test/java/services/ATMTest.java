@@ -1,9 +1,8 @@
 package services;
 
-import dao.DaoException;
+import services.customExeptions.CardNotFoundException;
 import services.customExeptions.IncorrectPinException;
 import services.customExeptions.NegativeBalanceException;
-import services.entity.Card;
 import lombok.extern.slf4j.Slf4j;
 import org.example.TransactionType;
 import org.junit.jupiter.api.Test;
@@ -30,7 +29,6 @@ class ATMTest {
         log.info(String.valueOf(bigDecimal2.compareTo(bigDecimal1)));
         log.info(String.valueOf(bigDecimal1.compareTo(bigDecimal2)));
         log.info(String.valueOf(bigDecimal2.compareTo(bigDecimal2)));
-
         log.info(String.valueOf(bigDecimal2.subtract(bigDecimal1)));
     }
 
@@ -40,12 +38,11 @@ class ATMTest {
         log.info(transactionType.toString());
     }
 
-
     @Test
     void transferPToPTest() {
         try {
             atm.transferPToP("4276600011111111", "1111","4274600000000000", "100");
-        } catch (DaoException| IncorrectPinException |NegativeBalanceException e) {
+        } catch (CardNotFoundException | IncorrectPinException |NegativeBalanceException e) {
             e.printStackTrace();
         }
     }
