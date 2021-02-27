@@ -6,11 +6,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import services.entity.User;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface UsersRepository extends JpaRepository<User, Integer> {
+
+    Optional<User> findByUserNameAndSurnameAndBirthdayAndEmail(String userName, String surname, LocalDate birthday, String email);
+
+
+    ////////////////////////////////////////
 
     Optional<User> findByUserName(String userName);
 

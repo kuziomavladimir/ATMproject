@@ -4,6 +4,7 @@ import lombok.*;
 import org.example.TransactionType;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -17,10 +18,14 @@ public class BankTransaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    @Pattern(regexp = "[0-9]{16}")
     private String cardNumber;
+
     private LocalDateTime dateTime;
     private BigDecimal amount;
     private String currency;
+
     @Enumerated(EnumType.STRING)
     private TransactionType transactionType;
 

@@ -41,7 +41,7 @@ class ATMTest {
     @Test
     void transferPToPTest() {
         try {
-            atm.transferPToP("4276600011111111", "1111","4274600000000000", "100");
+            atm.transferPToP("4276600011111111", "1111","4274600000000000", "100000000000000");
         } catch (CardNotFoundException | IncorrectPinException |NegativeBalanceException e) {
             e.printStackTrace();
         }

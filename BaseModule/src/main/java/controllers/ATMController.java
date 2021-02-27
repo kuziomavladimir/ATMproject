@@ -1,5 +1,11 @@
 package controllers;
 
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import services.customExeptions.CardNotFoundException;
 import services.ATM;
 import services.customExeptions.IncorrectPinException;
@@ -10,14 +16,21 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import services.customExeptions.ViolationUniquenessException;
+import services.entity.User;
+
+import javax.validation.ConstraintViolationException;
+import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 @Slf4j
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/ATM")
 public class ATMController {
 
-    @Autowired
-    private ATM atm;
+    private final ATM atm;
 
     @GetMapping()
     public String makeStartPageGet() {
@@ -25,11 +38,8 @@ public class ATMController {
     }
 
     @PostMapping()
-    @Transactional
     public String makeStartPagePost(@ModelAttribute("num") String cardNumber,
                                     @ModelAttribute("pin") String pinCode) {
-        log.info("Введённый номер карты и пин:" + cardNumber + "\t" + pinCode);
-
         try {
             atm.authentication(cardNumber, pinCode);
         } catch (CardNotFoundException | IncorrectPinException e) {
@@ -85,7 +95,6 @@ public class ATMController {
         return "TransferPage";
     }
 
-    @Transactional
     @PostMapping("/transfer")
     public String makeTransferPagePost(@ModelAttribute("num") String cardNumber,
                                        @ModelAttribute("pin") String pinCode,
@@ -101,6 +110,26 @@ public class ATMController {
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
         log.info("Пост запрос на перевод проведен");
-        return "redirect:/ATM/answer?answertext=Successfully!!!";
+        return "redirect:/ATM/answer?answertext=Successfull!!!";
+    }
+
+    @GetMapping("/open")
+    public String makeOpenCardPageGet(@ModelAttribute("user") User user) {
+        return "OpenCardPage";
+    }
+
+    @PostMapping("/open")
+    public String makeOpenCardPagePost(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "OpenCardPage";
+        }
+
+        try {
+            atm.createNewCard(user);
+        } catch (ViolationUniquenessException e) {
+            log.info(e.toString());
+            return "redirect:/ATM/answer?answertext=" + e.getMessage();
+        }
+        return "redirect:/ATM/answer?answertext=Successfull!!!";
     }
 }

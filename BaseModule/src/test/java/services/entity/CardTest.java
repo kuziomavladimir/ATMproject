@@ -1,6 +1,9 @@
 package services.entity;
 
 import controllers.Application;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import services.ATM;
 import services.customExeptions.CardNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeAll;
@@ -9,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import repository.CardsRepository;
+import services.customExeptions.ViolationUniquenessException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -17,9 +21,11 @@ import javax.validation.ValidatorFactory;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -31,6 +37,9 @@ class CardTest {
 
     @Autowired
     private CardsRepository cardsRepository;
+
+    @Autowired
+    private ATM atm;
 
     @BeforeAll
     public static void setUp() {
@@ -78,5 +87,51 @@ class CardTest {
     @Test
     void saveNewCardTest() throws CardNotFoundException {
         cardsRepository.save(new Card(1, "2202200213435657", "0000", "RUR", BigDecimal.valueOf(50000)));
+    }
+
+    @Test
+    void saveNewCardUniqNumberTest() throws CardNotFoundException {
+        //cardsRepository.save(new Card(1, "0000", "RUR", BigDecimal.valueOf(50000)));
+        //todo: потестировать уникальность в циклах
+
+        List<String> stringList = new ArrayList<>();
+        long l = 0;
+        for(int i = 0; i <= 100000; i++) {
+            String unique2 = UUID.randomUUID().toString().replaceAll("[^0-9]", "0").substring(0, 16);
+            log.info(unique2);
+            l = stringList.stream().filter(s -> s.equals(unique2)).count();
+            stringList.add(unique2);
+        }
+        log.info(Long.toString(l));
+        log.info(Integer.toString(stringList.size()));
+    }
+
+    @Test
+    void createRandomPinTest() {
+        for (int i = 0; i <= 100; i++) {
+            log.info(Double.toString(Math.random() * 1000).replaceAll("[^0-9]", "").substring(0, 4));
+        }
+    }
+
+    @Test
+    @Transactional
+    void createNewCardTest() {
+        try {
+            atm.createNewCard(new User("Sta", "Derdfgow", LocalDate.of(1995, 05, 12), "sss@yandex.ru"));
+        } catch (ViolationUniquenessException e) {
+            e.printStackTrace();
+        }
+        log.info("продолжает работать");
+    }
+
+    @Test
+    void validateCreateCardTest() {
+        Card card = new Card(1, "02", "0000", "RUR", BigDecimal.valueOf(50000));
+        log.info(card.toString());
+
+        Set<ConstraintViolation<Card>> violationSet = validator.validateValue(Card.class, "tryesEnterPin", 0);
+        for (ConstraintViolation<Card> violation: violationSet) {
+            log.info(violation.getMessage() + "\n" + violation.getInvalidValue());
+        }
     }
 }

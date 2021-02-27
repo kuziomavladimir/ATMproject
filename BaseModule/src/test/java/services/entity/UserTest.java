@@ -1,14 +1,18 @@
 package services.entity;
 
 import controllers.Application;
+import org.springframework.dao.DataIntegrityViolationException;
+import services.ATM;
 import services.customExeptions.CardNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import repository.UsersRepository;
+import services.customExeptions.ViolationUniquenessException;
 
 import java.time.LocalDate;
+import java.util.Optional;
 
 @Slf4j
 @SpringBootTest(classes = Application.class)
@@ -16,6 +20,8 @@ class UserTest {
 
     @Autowired
     private UsersRepository usersRepository;
+    @Autowired
+    private ATM atm;
 
     @Test
     void findByIdTest() throws CardNotFoundException {
@@ -26,7 +32,7 @@ class UserTest {
 
     @Test
     void isertUserTest() throws CardNotFoundException {
-        User user = new User("666aaazxczxc", "666aaaazxczxc", LocalDate.now(), "5464564ZXCZsdfXC");
+        User user = new User("666aaazxczxc", "666aaaazxczxc", LocalDate.now(), "ZXCZsdfXCh");
         usersRepository.save(user);
     }
 
@@ -63,6 +69,36 @@ class UserTest {
     @Test
     void findAllUsers2Test() throws CardNotFoundException {
         log.info(usersRepository.findAllUsers2().toString());
+    }
+
+    @Test
+    void createNewUniqueUserTest1() {
+        User user = new User("Petya", "Ivanonyov", LocalDate.of(1995, 05, 12), "Petr@yandex.ru");
+
+        try {
+            User u = usersRepository.findByUserNameAndSurnameAndBirthdayAndEmail(user.getUserName(), user.getSurname(),
+                    user.getBirthday(), user.getEmail()).orElseGet(() -> {
+                usersRepository.save(user);
+                return user;
+            });
+            log.info(u.toString());
+
+        } catch (DataIntegrityViolationException e) {
+            log.info(e.toString() + "ЕМЭЙЛ Занят, измените!!!");
+        }
+
+    }
+
+    @Test
+    void createNewUniqueUserTest2() {
+        User user = new User("Anna", "Popov", LocalDate.of(1995, 05, 12), "Anna@yandex.ru");
+
+        try {
+            log.info(atm.createOrFindNewUser(user).toString());
+        } catch (ViolationUniquenessException e) {
+            log.info(e.toString());
+        }
+
     }
 
 }

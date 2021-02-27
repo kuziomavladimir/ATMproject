@@ -1,9 +1,16 @@
 package services;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Transaction;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.transaction.annotation.Propagation;
+import repository.UsersRepository;
 import services.customExeptions.CardNotFoundException;
 import org.springframework.stereotype.Service;
 import repository.BankTransactionsRepository;
 import repository.CardsRepository;
+import services.customExeptions.ViolationUniquenessException;
 import services.entity.BankTransaction;
 import services.entity.Card;
 import services.customExeptions.IncorrectPinException;
@@ -11,19 +18,22 @@ import services.customExeptions.NegativeBalanceException;
 import org.example.TransactionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import services.entity.User;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class ATM {
-    // Основной класс с бизнесс-методами, моделирует функции банкомата, входит в доменную модель
+    // Основной класс с бизнесс-методами, моделирует функции банкомата
 
-    @Autowired
-    private CardsRepository cardsRepository;
-    @Autowired
-    private BankTransactionsRepository bankTransactionsRepository;
+    private final CardsRepository cardsRepository;
+    private final BankTransactionsRepository bankTransactionsRepository;
+    private final UsersRepository usersRepository;
 
 
     public Card searchCard(String cardNumber) throws CardNotFoundException {
@@ -101,4 +111,41 @@ public class ATM {
             throw new NegativeBalanceException("The amount entered exceeds your account balance!");
         }
     }
+
+    @Transactional(rollbackFor=Exception.class)
+    public User createOrFindNewUser(User incomingUser) throws ViolationUniquenessException {
+        // Поиск, либо создание нового пользователя в бд
+
+        User user;
+        try {
+            user = usersRepository.findByUserNameAndSurnameAndBirthdayAndEmail(incomingUser.getUserName(), incomingUser.getSurname(),
+                    incomingUser.getBirthday(), incomingUser.getEmail()).orElseGet(() -> {
+                usersRepository.save(incomingUser);
+                log.info("Новый пользователь добавлен в БД");
+                return incomingUser;
+            });
+        } catch (DataIntegrityViolationException e) {
+            throw new ViolationUniquenessException("E-mail address is already used, please change");
+        }
+        return user;
+    }
+
+    @Transactional(rollbackFor=Exception.class)
+    public void createNewCard(User incomingUser) throws ViolationUniquenessException {
+        // Создание новой карты в бд
+
+        User user = createOrFindNewUser(incomingUser);
+        String uniqueCardNumber = UUID.randomUUID().toString().replaceAll("[^0-9]", "0").substring(0, 16);
+        String randomPinCode = Double.toString(Math.random() * 1000).replaceAll("[^0-9]", "").substring(0, 4);
+        Card card = new Card(user.getUserId(), uniqueCardNumber, randomPinCode, "RUR", BigDecimal.valueOf(0));
+        log.info(card.toString());
+
+        try {
+            cardsRepository.save(card);
+        } catch (DataIntegrityViolationException e) {
+            throw new ViolationUniquenessException("Card number uniqueness error, please repeat");
+        }
+    }
+
+
 }
