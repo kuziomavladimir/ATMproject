@@ -130,6 +130,6 @@ public class ATMController {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
-        return "redirect:/ATM/answer?answertext=Successfull!!!";
+        return "redirect:/ATM/answer?answertext=Successfull!\n" + "Your card number and pin-code sent on email: " + user.getEmail();
     }
 }

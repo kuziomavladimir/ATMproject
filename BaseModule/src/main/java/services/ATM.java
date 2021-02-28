@@ -35,6 +35,8 @@ public class ATM {
     private final BankTransactionsRepository bankTransactionsRepository;
     private final UsersRepository usersRepository;
 
+    @Autowired
+    private MailSender mailSender;
 
     public Card searchCard(String cardNumber) throws CardNotFoundException {
         // Поиск карты по номеру
@@ -145,6 +147,13 @@ public class ATM {
         } catch (DataIntegrityViolationException e) {
             throw new ViolationUniquenessException("Card number uniqueness error, please repeat");
         }
+
+        BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
+                card.getCurrency(), TransactionType.OPENCARD);
+        bankTransactionsRepository.save(bankTransaction);
+
+        String message = "Your card number:\t" + card.getNumber() + "\n" + "Pin code:\t" + card.getPinCode();
+        mailSender.send(user.getEmail(), "Opening a new card", message);
     }
 
 

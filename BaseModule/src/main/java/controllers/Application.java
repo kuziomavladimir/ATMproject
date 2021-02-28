@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-@SpringBootApplication(scanBasePackages = {"services", "controllers", "repository"})
+@SpringBootApplication(scanBasePackages = {"services", "controllers", "repository", "config"})
 @EnableJpaRepositories(basePackages = "repository")
 @EntityScan("services.entity")
 public class Application {
@@ -19,5 +19,6 @@ public class Application {
     //todo: добавить интерфейсы для более гибкого использования
     //todo: продумать, как сгенерить уникальный номер бк, которого нет в базе, лучше сгенерить через sql???
     //todo: присылать номер созданной карты на емайл SpringBoot Mail???
+    //todo: добавить тип транзакции открытие новой картты
 
 }
