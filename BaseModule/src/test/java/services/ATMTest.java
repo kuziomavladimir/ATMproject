@@ -12,6 +12,8 @@ import controllers.Application;
 
 import java.math.BigDecimal;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Slf4j
 @SpringBootTest(classes = Application.class)
 class ATMTest {
@@ -30,6 +32,8 @@ class ATMTest {
         log.info(String.valueOf(bigDecimal1.compareTo(bigDecimal2)));
         log.info(String.valueOf(bigDecimal2.compareTo(bigDecimal2)));
         log.info(String.valueOf(bigDecimal2.subtract(bigDecimal1)));
+
+        assertEquals(-1, bigDecimal1.compareTo(bigDecimal2));
     }
 
     @Test
