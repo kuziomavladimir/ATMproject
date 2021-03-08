@@ -2,21 +2,16 @@ package services;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.Transaction;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.transaction.annotation.Propagation;
 import repository.UsersRepository;
 import services.customExeptions.CardNotFoundException;
 import org.springframework.stereotype.Service;
 import repository.BankTransactionsRepository;
 import repository.CardsRepository;
-import services.customExeptions.ViolationUniquenessException;
 import services.entity.BankTransaction;
 import services.entity.Card;
 import services.customExeptions.IncorrectPinException;
 import services.customExeptions.NegativeBalanceException;
 import org.example.TransactionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import services.entity.User;
 
@@ -35,9 +30,6 @@ public class ATM {
     private final BankTransactionsRepository bankTransactionsRepository;
     private final UsersRepository usersRepository;
 
-    @Autowired
-    private MailSender mailSender;
-
     public Card searchCard(String cardNumber) throws CardNotFoundException {
         // Поиск карты по номеру
         return cardsRepository.findByNumber(cardNumber).orElseThrow(() -> new CardNotFoundException("Card not found in Data base"));
@@ -45,6 +37,7 @@ public class ATM {
 
     public void authentication(String cardNumber, String pinCode) throws CardNotFoundException, IncorrectPinException {
         // Аутентификация
+
         Card card = searchCard(cardNumber);
         if (card.getTryesEnterPin() <= 0) {
             throw new IncorrectPinException("The PIN code was previously entered incorrectly 3 times, the operation is not available");
@@ -60,6 +53,7 @@ public class ATM {
 
     public BigDecimal checkBalance(String cardNumber, String pinCode) throws CardNotFoundException, IncorrectPinException{
         // Проверка баланса
+
         Card card = searchCard(cardNumber);
         authentication(cardNumber, pinCode);
         BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
@@ -70,6 +64,7 @@ public class ATM {
 
     public List<BankTransaction> searchTransactionsStory(String cardNumber, String pinCode) throws CardNotFoundException, IncorrectPinException{
         // Проверка истории операций
+
         Card card = searchCard(cardNumber);
         authentication(cardNumber, pinCode);
         BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
@@ -86,13 +81,7 @@ public class ATM {
         Card senderCard = searchCard(senderCardNumber);
         authentication(senderCardNumber, pinCode);
 
-        BigDecimal bigDecimal;
-        try {
-            bigDecimal = new BigDecimal(amount);
-        } catch (NumberFormatException e) {
-            throw new NegativeBalanceException("Incorrect amount format");
-        }
-
+        BigDecimal bigDecimal = new BigDecimal(amount);
         Card recipientCard = searchCard(recipientCardNumber);
 
         if(senderCard.getBalance().compareTo(bigDecimal) >= 0) {
@@ -115,45 +104,34 @@ public class ATM {
     }
 
     @Transactional(rollbackFor=Exception.class)
-    public User createOrFindNewUser(User incomingUser) throws ViolationUniquenessException {
+    public User createOrFindNewUser(User incomingUser) {
         // Поиск, либо создание нового пользователя в бд
 
-        User user;
-        try {
-            user = usersRepository.findByUserNameAndSurnameAndBirthdayAndEmail(incomingUser.getUserName(), incomingUser.getSurname(),
-                    incomingUser.getBirthday(), incomingUser.getEmail()).orElseGet(() -> {
-                usersRepository.save(incomingUser);
-                log.info("Новый пользователь добавлен в БД");
-                return incomingUser;
-            });
-        } catch (DataIntegrityViolationException e) {
-            throw new ViolationUniquenessException("E-mail address is already used, please change");
-        }
+        User user = usersRepository.findByUserNameAndSurnameAndBirthdayAndEmail(incomingUser.getUserName(), incomingUser.getSurname(),
+                incomingUser.getBirthday(), incomingUser.getEmail()).orElseGet(() -> {
+            usersRepository.save(incomingUser);
+            log.info("Новый пользователь добавлен в БД");
+            return incomingUser;
+        });
         return user;
     }
 
     @Transactional(rollbackFor=Exception.class)
-    public void createNewCard(User incomingUser) throws ViolationUniquenessException {
+    public Card createNewCard(User incomingUser) {
         // Создание новой карты в бд
 
         User user = createOrFindNewUser(incomingUser);
+
         String uniqueCardNumber = UUID.randomUUID().toString().replaceAll("[^0-9]", "0").substring(0, 16);
         String randomPinCode = Double.toString(Math.random() * 1000).replaceAll("[^0-9]", "").substring(0, 4);
         Card card = new Card(user.getUserId(), uniqueCardNumber, randomPinCode, "RUR", BigDecimal.valueOf(0));
         log.info(card.toString());
-
-        try {
-            cardsRepository.save(card);
-        } catch (DataIntegrityViolationException e) {
-            throw new ViolationUniquenessException("Card number uniqueness error, please repeat");
-        }
+        cardsRepository.save(card);
 
         BankTransaction bankTransaction = new BankTransaction(card.getNumber(), LocalDateTime.now(), BigDecimal.valueOf(0),
                 card.getCurrency(), TransactionType.OPENCARD);
         bankTransactionsRepository.save(bankTransaction);
-
-        String message = "Your card number:\t" + card.getNumber() + "\n" + "Pin code:\t" + card.getPinCode();
-        mailSender.send(user.getEmail(), "Opening a new card", message);
+        return card;
     }
 
 

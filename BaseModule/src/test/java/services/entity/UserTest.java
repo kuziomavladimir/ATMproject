@@ -9,10 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import repository.UsersRepository;
-import services.customExeptions.ViolationUniquenessException;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Slf4j
 @SpringBootTest(classes = Application.class)
@@ -91,11 +89,11 @@ class UserTest {
 
     @Test
     void createNewUniqueUserTest2() {
-        User user = new User("Anna", "Popov", LocalDate.of(1995, 05, 12), "Anna@yandex.ru");
+        User user = new User("Annana", "Popov", LocalDate.of(1995, 05, 12), "Anna@yandex.ru");
 
         try {
             log.info(atm.createOrFindNewUser(user).toString());
-        } catch (ViolationUniquenessException e) {
+        } catch (DataIntegrityViolationException e) {
             log.info(e.toString());
         }
 

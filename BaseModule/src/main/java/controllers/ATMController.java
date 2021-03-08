@@ -1,11 +1,9 @@
 package controllers;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Propagation;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.annotation.Validated;
+import services.MailSender;
 import services.customExeptions.CardNotFoundException;
 import services.ATM;
 import services.customExeptions.IncorrectPinException;
@@ -13,16 +11,12 @@ import services.customExeptions.NegativeBalanceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import services.customExeptions.ViolationUniquenessException;
+import services.entity.Card;
 import services.entity.User;
 
-import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -31,6 +25,9 @@ import javax.validation.constraints.NotNull;
 public class ATMController {
 
     private final ATM atm;
+
+    @Autowired
+    private MailSender mailSender;
 
     @GetMapping()
     public String makeStartPageGet() {
@@ -108,6 +105,9 @@ public class ATMController {
         } catch (CardNotFoundException |IncorrectPinException|NegativeBalanceException e) {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "redirect:/ATM/answer?answertext=Incorrect Amount format";
         }
         log.info("Пост запрос на перевод проведен");
         return "redirect:/ATM/answer?answertext=Successfull!!!";
@@ -124,12 +124,16 @@ public class ATMController {
             return "OpenCardPage";
         }
 
+        Card card;
         try {
-            atm.createNewCard(user);
-        } catch (ViolationUniquenessException e) {
-            log.info(e.toString());
-            return "redirect:/ATM/answer?answertext=" + e.getMessage();
+            card = atm.createNewCard(user);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            return "redirect:/ATM/answer?answertext=The uniqueness of the card number or email is violated";
         }
+
+        String message = "Your card number:\t" + card.getNumber() + "\n" + "Pin code:\t" + card.getPinCode();
+        mailSender.send(user.getEmail(), "Opening a new card", message);
         return "redirect:/ATM/answer?answertext=Successfull!\n" + "Your card number and pin-code sent on email: " + user.getEmail();
     }
 }

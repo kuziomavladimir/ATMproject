@@ -1,8 +1,7 @@
 package services.entity;
 
 import controllers.Application;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.DataIntegrityViolationException;
 import services.ATM;
 import services.customExeptions.CardNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import repository.CardsRepository;
-import services.customExeptions.ViolationUniquenessException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
@@ -114,12 +112,12 @@ class CardTest {
     }
 
     @Test
-    @Transactional
     void createNewCardTest() {
         try {
-            atm.createNewCard(new User("Sta", "Derdfgow", LocalDate.of(1995, 05, 12), "sss@yandex.ru"));
-        } catch (ViolationUniquenessException e) {
+            atm.createNewCard(new User("Startrtsss", "Derdfgow", LocalDate.of(1995, 05, 12), "sss@yandex.ru"));
+        } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
+            log.info(e.toString());
         }
         log.info("продолжает работать");
     }
