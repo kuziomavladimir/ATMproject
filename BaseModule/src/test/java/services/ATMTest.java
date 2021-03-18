@@ -11,8 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import controllers.Application;
 
 import java.math.BigDecimal;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 @SpringBootTest(classes = Application.class)
@@ -26,12 +30,12 @@ class ATMTest {
         BigDecimal bigDecimal1 = new BigDecimal("1000");
         BigDecimal bigDecimal2 = new BigDecimal("2000");
 
-        log.info(bigDecimal1.toString());
-
-        log.info(String.valueOf(bigDecimal2.compareTo(bigDecimal1)));
-        log.info(String.valueOf(bigDecimal1.compareTo(bigDecimal2)));
-        log.info(String.valueOf(bigDecimal2.compareTo(bigDecimal2)));
-        log.info(String.valueOf(bigDecimal2.subtract(bigDecimal1)));
+//        log.info(bigDecimal1.toString());
+//
+//        log.info(String.valueOf(bigDecimal2.compareTo(bigDecimal1)));
+//        log.info(String.valueOf(bigDecimal1.compareTo(bigDecimal2)));
+//        log.info(String.valueOf(bigDecimal2.compareTo(bigDecimal2)));
+//        log.info(String.valueOf(bigDecimal2.subtract(bigDecimal1)));
 
         assertEquals(-1, bigDecimal1.compareTo(bigDecimal2));
     }
@@ -50,4 +54,12 @@ class ATMTest {
             e.printStackTrace();
         }
     }
+
+    @Test
+    void checkStringTest() {
+        String s = "qwerty";
+        assertEquals(s.length(), s.chars().mapToObj(e -> (char) e).collect(Collectors.toSet()).size());
+    }
+
+
 }

@@ -25,9 +25,7 @@ import javax.validation.Valid;
 public class ATMController {
 
     private final ATM atm;
-
-    @Autowired
-    private MailSender mailSender;
+    private final MailSender mailSender;
 
     @GetMapping()
     public String makeStartPageGet() {
