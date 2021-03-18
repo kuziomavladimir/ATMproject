@@ -1,27 +1,31 @@
 package controllers;
 
-import dao.DaoException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.validation.BindingResult;
+import services.MailSender;
+import services.customExeptions.CardNotFoundException;
 import services.ATM;
 import services.customExeptions.IncorrectPinException;
 import services.customExeptions.NegativeBalanceException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import services.entity.Card;
+import services.entity.User;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Size;
 
 @Slf4j
+@RequiredArgsConstructor
 @Controller
 @RequestMapping("/ATM")
 public class ATMController {
 
-    @Autowired
-    private ATM atm;
+    private final ATM atm;
+    private final MailSender mailSender;
 
     @GetMapping()
     public String makeStartPageGet() {
@@ -29,14 +33,11 @@ public class ATMController {
     }
 
     @PostMapping()
-    @Transactional
     public String makeStartPagePost(@ModelAttribute("num") String cardNumber,
                                     @ModelAttribute("pin") String pinCode) {
-        log.info("Введённый номер карты и пин:" + cardNumber + "\t" + pinCode);
-
         try {
             atm.authentication(cardNumber, pinCode);
-        } catch (DaoException | IncorrectPinException e) {
+        } catch (CardNotFoundException | IncorrectPinException e) {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
@@ -61,7 +62,7 @@ public class ATMController {
                                   Model model) {
         try {
             model.addAttribute("message", atm.checkBalance(cardNumber, pinCode));
-        } catch (DaoException | IncorrectPinException e) {
+        } catch (CardNotFoundException | IncorrectPinException e) {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
@@ -75,7 +76,7 @@ public class ATMController {
                                        Model model) {
         try {
             model.addAttribute("transactions", atm.searchTransactionsStory(cardNumber, pinCode));
-        } catch (DaoException | IncorrectPinException e) {
+        } catch (CardNotFoundException | IncorrectPinException e) {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
         }
@@ -89,7 +90,6 @@ public class ATMController {
         return "TransferPage";
     }
 
-    @Transactional
     @PostMapping("/transfer")
     public String makeTransferPagePost(@ModelAttribute("num") String cardNumber,
                                        @ModelAttribute("pin") String pinCode,
@@ -100,11 +100,38 @@ public class ATMController {
 
         try {
             atm.transferPToP(cardNumber, pinCode, resipientCardNumber, amount);
-        } catch (DaoException|IncorrectPinException|NegativeBalanceException e) {
+        } catch (CardNotFoundException |IncorrectPinException|NegativeBalanceException e) {
             log.info(e.toString());
             return "redirect:/ATM/answer?answertext=" + e.getMessage();
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            return "redirect:/ATM/answer?answertext=Incorrect Amount format";
         }
         log.info("Пост запрос на перевод проведен");
-        return "redirect:/ATM/answer?answertext=Successfully!!!";
+        return "redirect:/ATM/answer?answertext=Successfull!!!";
+    }
+
+    @GetMapping("/open")
+    public String makeOpenCardPageGet(@ModelAttribute("user") User user) {
+        return "OpenCardPage";
+    }
+
+    @PostMapping("/open")
+    public String makeOpenCardPagePost(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "OpenCardPage";
+        }
+
+        Card card;
+        try {
+            card = atm.createNewCard(user);
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            return "redirect:/ATM/answer?answertext=The uniqueness of the card number or email is violated";
+        }
+
+        String message = "Your card number:\t" + card.getNumber() + "\n" + "Pin code:\t" + card.getPinCode();
+        mailSender.send(user.getEmail(), "Opening a new card", message);
+        return "redirect:/ATM/answer?answertext=Successfull!\n" + "Your card number and pin-code sent on email: " + user.getEmail();
     }
 }

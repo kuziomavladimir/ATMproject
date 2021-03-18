@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>ATM</title>
+</head>
+<body>
+<p>ATM</p>
+
+<form th:method="POST" th:action="@{/ATM/open}" th:object="${user}">
+
+    <label for="name1">Enter UserName:</label>
+    <input type="text" th:field="*{userName}" id="name1"/>
+    <div style="color: red" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}">Name error</div>
+    <br/>
+    <br/>
+
+    <label for="name2">Enter Surname:</label>
+    <input type="text" th:field="*{surname}" id="name2"/>
+    <div style="color: red" th:if="${#fields.hasErrors('surname')}" th:errors="*{surname}">Surname error</div>
+    <br/>
+    <br/>
+
+    <label for="name3">Enter BirthDay:</label>
+    <input type="date" th:value="*{birthday}" th:field="*{birthday}" id="name3"/>
+    <div style="color: red" th:if="${#fields.hasErrors('birthday')}" th:errors="*{birthday}">Birthday error</div>
+    <br/>
+    <br/>
+
+    <label for="name4">Enter Email:</label>
+    <input type="text" th:field="*{email}" id="name4"/>
+    <div style="color: red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email error</div>
+    <br/>
+    <br/>
+
+    <input type="submit" value="Enter!"/>
+</form>
+
+<br/>
+<a href="/ATM">Exit</a>
+
+
+</body>
+</html>
